@@ -41,7 +41,7 @@ associada à forma, de modo que é possível estimar efeitos alométricos
 sobre a variação de forma.
 
 **Alometria**: associação entre um caráter de interesse (morfológico, fisiológico,
-ou até mesmo ecológico) e tamanho corporal.
+ou até mesmo ecológico) e tamanho corporal [@huxley_problems_1932].
 
 <div class='notes'>
 
@@ -121,3 +121,4 @@ tri.ex.norm
 centroid.size(tri.ex.norm)
 ```
 
+## Bibliografia
