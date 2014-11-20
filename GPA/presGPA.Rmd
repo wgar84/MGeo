@@ -93,6 +93,20 @@ centroid.size(tri.ex)
 Assim, o tamanho do centróide é a variável
 que representa a variação de escala.
 
+@bookstein_morphometric_1991 demonstrou que o $CS$ é uma variável
+"pura" de tamanho.
+
+<div class='notes'>
+
+Isso significa que, dada uma população de configurações desprovida de
+relações alométricas, o CS necessariamente irá possuir correlações
+nulas com as variáveis de forma. Outras medidas que podem ser
+entendidas como tamanho, como por exemplo o comprimento total do
+crânio, podem ter correlações com as variáveis de forma, de modo que
+esse tipo de medida é na verdade uma combinação entre escala e forma. 
+
+</div>
+
 ----
 
 Para remover o efeito do tamanho das coordenadas cartesianas,
