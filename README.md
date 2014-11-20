@@ -12,9 +12,9 @@ ferramentas necessárias para conduzir um projeto baseado em
 Morfometria Geométrica.
 
 **Instrutor@s**
-  Bárbara Costa (<tafinha@gmail.com>)
-  Daniela Rossoni (<daniela.rossoni@gmail.com>)
-  Guilherme Garcia (<wgar@usp.br>)
+- Bárbara Costa (<tafinha@gmail.com>)
+- Daniela Rossoni (<daniela.rossoni@gmail.com>)
+- Guilherme Garcia (<wgar@usp.br>)
 
 ## Preliminares
 
