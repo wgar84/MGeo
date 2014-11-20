@@ -80,11 +80,37 @@ para possíveis problemas; no entanto, no início do curso reservamos
 algum tempo para ajudar vocês a instalar estes pacotes em seu
 computador.
 
+#### MAC OS 
+
+Provavelmente, problemas de instalação do _rgl_ no MAC OS são
+relacionados à instalação do X11, o controlador de dispositivos
+gráficos padrão do R. Se você não possui o X11, vá ao sítio
+http://xquartz.macosforge.org/ e instale o XQuartz.
+
+A partir da edição *Yosemite*, o X11 foi transferido da pasta */usr*
+para a pasta */opt*, de modo que o R não consegue encontrar o X11
+quando tenta instalar o _rgl_. Isso pode ser facilmente resolvido,
+supondo que você possua uma instalação do X11 no seu sistema.
+
+Abra um terminal no MAC OS (você pode pressionar
+*Command + Espaço*, digitar 'terminal' no *Spotlight* e pressionar
+Enter) e digite
+
+```{bash}
+$ sudo ln -sf /opt/X11 /usr/X11
+```
+
+O terminal irá pedir sua senha de usuário. O que você fez foi criar um
+link na pasta */usr* para a pasta */opt/X11*. Dessa forma, o R deverá
+ser capaz de encontrar o X11 quando o procura na pasta */usr*, e você
+pode tentar instalar o _shapes_ e o _rgl_ a partir do próprio R como
+exposto acima.
+
 #### Ubuntu / Linux Mint
 
-Em geral, problemas de instalação no Ubuntu são resolvidos
-instalando-se a versão pré-compilada do *rgl* disponível nos
-repositórios destas distribuições.
+Em geral, problemas de instalação no Ubuntu e derivações deste são
+resolvidos instalando-se a versão pré-compilada do *rgl* disponível
+nos repositórios destas distribuições.
 
 ```{shell}
 $ sudo apt-get install r-cran-rgl
