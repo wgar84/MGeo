@@ -1,0 +1,99 @@
+---
+title: "Generalized Procrustes Analysis"
+subtitle: "Morfometria Geométrica - Aula 2"
+author: Guilherme Garcia
+date: 18 de Novembro de 2014
+logo: '../Figuras/logo.jpg'
+output:	
+  ioslides_presentation:
+  mathjax: default
+  widescreen: true
+  incremental: true
+  toc: true
+---
+
+# Preliminares
+
+```{r, echo = FALSE}
+require(shapes)
+require(geomorph)
+```
+
+## O que é a GPA? {.vcenter}
+
+A GPA ('Generalized Procrustes Analysis') consiste em realizar uma série de
+operações sobre um conjunto de configurações de marcos, de maneira a remover deste
+conjunto aquela variação que não é informativa do ponto de vista biológico:
+
+> - Translação
+
+> - Rotação
+
+> - Escala
+
+## Mas... {.vcenter .build}
+
+Variação em escala é importante do ponto de vista biológico.
+O que a GPA nos permite no caso é separar a variação associada à
+escala daquela associada à forma.
+
+(e bem, essa distinção será importante na aula de Alometria...)
+
+# Passo a Passo {.flexbox .vcenter .hcenter}
+
+* $k$: número de marcos anatômicos
+* $m$: dimensões
+* $n$: número de indivíduos
+
+## Centróide {.flexbox .vcenter .hcenter}
+
+![Posição do Centróide](centroid.jpg)
+
+$$C_j = \frac{1}{k}\sum_{i=1}^{k}X_{ij}$$
+
+<div class='notes'>
+Média aritmética simples entre os valores em cada marco,
+para cada uma das $m$ dimensões.
+</div>
+
+----
+
+```{r}
+tri.ex <- matrix(c(-1, 1, 0, 1, 1, -1), nrow = 3, byrow = T)
+tri.ex
+colMeans(tri.ex)
+```
+
+## Tamanho do Centróide {.flexbox .vcenter .hcenter}
+
+![Tamanho do Centróide](centroidsize.jpg)
+
+$$CS(X) = \sqrt{\sum_{i=1}^{k}\sum_{j=1}^{m}(X_{ij} - C_j)^2}$$
+
+<div class='notes'>
+$\sqrt{L1^2 + L2^2 + L3^2}$
+</div>
+
+----
+
+```{r}
+centroid.size(tri.ex)
+```
+
+Assim, o tamanho do centróide é a variável
+que representa a variação de escala.
+
+----
+
+Para remover o efeito do tamanho das coordenadas cartesianas,
+podemos simplesmente dividir cada coordenada de cada *landmark*
+de uma configuração pelo tamanho do centróide.
+
+```{r}
+### <b>
+tri.ex.norm <- tri.ex / centroid.size(tri.ex)
+### </b>
+tri.ex.norm
+centroid.size(tri.ex.norm)
+```
+
