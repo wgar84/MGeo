@@ -47,3 +47,48 @@ recomendamos o sítio http://ecologia.ib.usp.br/bie5782/, da disciplina
 básica de R oferecida pelo Departamento de Ecologia do IB-USP. O link
 "Atividades Preparatórias" oferece um introdução compreensiva da
 linguagem.
+
+### Pacotes _shapes_ e _geomorph_
+
+O ambiente de programação **R** possui uma multitude de pacotes
+escritos para execução de análises em diversos contextos. O uso do R
+em Morfometria Geométrica necessita de certas funções e rotinas
+disponíveis dentro dos pacotes *geomorph* e *shapes*. Dessa forma, é
+necessário que você instale estes pacotes sobre a instalação do R
+básico que você possui em seu computador. No entanto, a instalação
+destes pacotes pode apresentar problemas, devido à dependência que
+ambos os pacotes apresentam ao pacote *rgl*, que essencialmente
+providencia uma maneira de visualizarmos e manipularmos gráficos em
+três dimensões no R. Em princípio, podemos tentar instalar estes
+pacotes usando os comandos
+
+```{R}
+> install.packages('geomorph', dependencies = TRUE)
+> install.packages('shapes', dependencies = TRUE)
+```
+
+e, se tudo estiver bem, podemos carregá-los
+
+```{R}
+> require(geomorph)
+> require(shapes)
+```
+
+No entanto, a instalação destes pacotes pode apresentar erros, de modo
+a impedí-los de serem carregados. Apresentamos aqui algumas soluções
+para possíveis problemas; no entanto, no início do curso reservamos
+algum tempo para ajudar vocês a instalar estes pacotes em seu
+computador.
+
+#### Ubuntu / Linux Mint
+
+Em geral, problemas de instalação no Ubuntu são resolvidos
+instalando-se a versão pré-compilada do *rgl* disponível nos
+repositórios destas distribuições.
+
+```{shell}
+$ sudo apt-get install r-cran-rgl
+```
+
+Após essa instalação, pode-se tentar novamente instalar o _shapes_ e o
+_geomorph_ diretamente pelo R.

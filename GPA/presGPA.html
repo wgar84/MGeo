@@ -107,11 +107,7 @@
 
 <slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Preliminares</h2></hgroup><article  id="preliminares">
 
-<pre >## Loading required package: shapes
-## Loading required package: scatterplot3d
-## Loading required package: MASS</pre>
-
-</article></slide><slide class=''><hgroup><h2>O que é a GPA?</h2></hgroup><article  id="o-que-e-a-gpa" class="vcenter">
+</article></slide><slide class=''><hgroup><h2>O que é a GPA?</h2></hgroup><article  id="o-que-e-a-gpa">
 
 <p>A GPA (&#39;Generalized Procrustes Analysis&#39;) consiste em realizar uma série de operações sobre um conjunto de configurações de marcos, de maneira a remover deste conjunto aquela variação que não é informativa do ponto de vista biológico:</p>
 
@@ -127,13 +123,17 @@
 <li>Escala</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Mas&#8230;</h2></hgroup><article  id="mas..." class="vcenter build">
+</article></slide><slide class=''><hgroup><h2>Mas&#8230;</h2></hgroup><article  id="mas..." class="build">
 
-<p>Variação em escala é importante do ponto de vista biológico. O que a GPA nos permite no caso é separar a variação associada à escala daquela associada à forma.</p>
+<p>Variação em escala é importante do ponto de vista biológico.</p>
 
-<p>(e bem, essa distinção será importante na aula de Alometria&#8230;)</p>
+<p>A GPA nos permite separar a variação associada à escala daquela associada à forma, de modo que é possível estimar efeitos alométricos sobre a variação de forma.</p>
 
-</article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Passo a Passo</h2></hgroup><article  id="passo-a-passo" class="flexbox vcenter hcenter">
+<p><strong>Alometria</strong>: associação entre um caráter de interesse (morfológico, fisiológico, ou até mesmo ecológico) e tamanho corporal.</p>
+
+<aside class='note'><section><p>escala log-log</p></section></aside>
+
+</article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Passo a Passo</h2></hgroup><article  id="passo-a-passo">
 
 <ul>
 <li>\(k\): número de marcos anatômicos</li>
@@ -169,7 +169,7 @@ tri.ex</pre>
 
 <p>\[CS(X) = \sqrt{\sum_{i=1}^{k}\sum_{j=1}^{m}(X_{ij} - C_j)^2}\]</p>
 
-<aside class='note'><section>\(\sqrt{L1^2 + L2^2 + L3^2}\)</section></aside>
+<aside class='note'><section>CS (X) = \(\sqrt{L1^2 + L2^2 + L3^2}\)</section></aside>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
 
@@ -178,6 +178,10 @@ tri.ex</pre>
 <pre >## [1] 2.160247</pre>
 
 <p>Assim, o tamanho do centróide é a variável que representa a variação de escala.</p>
+
+<p><span class="cite">Bookstein (1991)</span> demonstrou que o \(CS\) é uma variável &quot;pura&quot; de tamanho.</p>
+
+<aside class='note'><section><p>Isso significa que, dada uma população de configurações desprovida de relações alométricas, o CS necessariamente irá possuir correlações nulas com as variáveis de forma. Outras medidas que podem ser entendidas como tamanho, como por exemplo o comprimento total do crânio, podem ter correlações com as variáveis de forma, de modo que esse tipo de medida é na verdade uma combinação entre escala e forma.</p></section></aside>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
 
@@ -193,7 +197,10 @@ tri.ex</pre>
 
 <pre class = 'prettyprint lang-r'>centroid.size(tri.ex.norm)</pre>
 
-<pre >## [1] 1</pre></article></slide>
+<pre >## [1] 1</pre>
+
+<div class="references">
+<p>Bookstein, F L. 1991. <em>Morphometric Tools for Landmark Data: geometry and Biology</em>. Cambridge: Cambridge University Press.</p></div></article></slide>
 
 
   <slide class="backdrop"></slide>
