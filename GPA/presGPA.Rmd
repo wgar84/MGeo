@@ -1,21 +1,19 @@
 ---
 title: "Generalized Procrustes Analysis"
-subtitle: "Morfometria Geométrica - Aula 2"
-author: Guilherme Garcia
-date: 18 de Novembro de 2014
-logo: '../Figuras/logo.jpg'
-output:	
-  ioslides_presentation:
-  mathjax: default
-  widescreen: true
-  incremental: true
-  toc: true
-bibliography: '../cursoGM.bib'
+subtitle: Morfometria Geométrica - Aula 2
+author: "Guilherme Garcia"
+logo: ../Figuras/logo.jpg
+date: "18 de Novembro de 2014"
+output:
+  ioslides_presentation: 
+    mathjax: default
+    toc: yes
+bibliography: ../cursoGM.bib
 ---
 
 # Preliminares
 
-```{r, echo = FALSE}
+```{r load_pack, include = FALSE}
 require(shapes)
 require(geomorph)
 ```
@@ -69,9 +67,9 @@ para cada uma das $m$ dimensões.
 ----
 
 ```{r}
-tri.ex <- matrix(c(-1, 1, 0, 1, 1, -1), nrow = 3, byrow = T)
-tri.ex
-colMeans(tri.ex)
+X <- matrix(c(-1, -1, 1, -1, 0, 1), nrow = 3, byrow = T)
+X
+colMeans(X)
 ```
 
 ## Tamanho do Centróide {.flexbox .vcenter .hcenter}
@@ -87,7 +85,7 @@ CS (X) = $\sqrt{L1^2 + L2^2 + L3^2}$
 ----
 
 ```{r}
-centroid.size(tri.ex)
+centroid.size(X)
 ```
 
 Assim, o tamanho do centróide é a variável
@@ -115,10 +113,169 @@ de uma configuração pelo tamanho do centróide.
 
 ```{r}
 ### <b>
-tri.ex.norm <- tri.ex / centroid.size(tri.ex)
+X.norm <- X / centroid.size(X)
 ### </b>
-tri.ex.norm
-centroid.size(tri.ex.norm)
+X.norm
+centroid.size(X.norm)
 ```
 
-## Bibliografia
+
+<div class='columns-2'>
+
+## Exemplo Mínimo {.smaller .build}
+
+Vamos seguir os passos referentes à GPA no exemplo mínimo de dois
+triângulos.
+
+$$
+X = \begin{bmatrix}
+	-1 & -1 \\
+	1 & -1 \\
+	0 & 1 \\
+	\end{bmatrix}
+\qquad	
+W = \begin {bmatrix}
+	1.07 & -1.64 \\
+	3.10 & -0.72 \\
+	1.55 & 0.82 \\
+	\end{bmatrix}
+$$
+	
+<div class='centered'>
+![](twotri.jpg)
+</div>
+
+## Translação {.smaller .build}
+
+Esta operação lida com aquela variação proveniente do
+posicionamento.
+
+```{r}
+X
+W <- matrix (c(1.07, -1.64, 3.1, -0.72, 1.55, 0.82),  nrow = 3, byrow = TRUE)
+W
+```
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X, W), asp = 1, xlab = '', ylab = '', col = 'white', yaxp = c(-2, 1, 3))
+points(rbind (X, X[1, ]), type = 'b', pch = 19)
+points(rbind (W, W [1, ]), type = 'b', pch = 15)
+text (0, -1/3, labels = 'X')
+text (colMeans (W), labels = 'W')
+```
+
+</div>
+
+---
+
+A operação é relativamente simples: nós apenas subtraímos a posição do
+centróide de cada configuração de suas coordenadas, efetivamente
+deslocando o centróide de todas as configurações para o par $(0, 0)$.
+
+<div class='centered'>
+```{r, fig.width = 4, fig.height = 4, echo = FALSE}
+par(mar = c(0, 0, 0, 0))
+W.center <- scale(W, center = TRUE, scale = FALSE)
+plot (rbind (W, W.center), asp = 1, xlab = '', ylab = '', col = 'white',
+      yaxt = 'n', xaxt = 'n', bty = 'n')
+points(rbind (W, W[1, ]), type = 'b', pch = 19, col = 'black')
+points(rbind (W.center, W.center[1, ]), type = 'b', pch = 19, col = 'lightgrey')
+arrows(W [, 1], W [, 2], W.center [, 1], W.center [, 2], lwd = 3, length = 0.15)
+text (1.7, -.71, labels = 'W')
+text (0, 0, labels = expression(W[c]))
+```
+</div>
+
+## {.smaller}
+
+A função *scale* dá conta de fazer isso:
+
+```{r}
+X.center <- scale(X, center = TRUE, scale = FALSE)
+X.center
+W.center <- scale(W, center = TRUE, scale = FALSE)
+W.center
+```
+
+<div class='notes'>
+
+Algumas funções produzem objetos que possuem atributos. Neste caso, a
+função *scale* subtrai a posição do centróide original e retorna o
+objeto *centralizado*. No entanto, ela retorna também um atributo
+deste objeto, que se refere à posição original do centróide.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.center, W.center),
+	  asp = 1, xlab = '', ylab = '', col = 'white', yaxp = c(-2, 1, 3), xaxp = c(-1, 1, 2))
+points(rbind (X.center, X.center[1, ]), type = 'b', pch = 19)
+points(rbind (W.center, W.center [1, ]), type = 'b', pch = 15)
+text (0, 0.1, labels = expression(X[c]))
+text (0, -0.1, labels = expression(W[c]))
+```
+
+</div>
+
+## Escalonamento {.smaller .build}
+
+Vamos escalonar ambos $X$ e $W$, desta vez guardando o $CS$ de cada configuração.
+
+<div class='columns-2'>
+
+```{r}
+cs.X <- centroid.size(X)
+cs.X
+X.centerscale <- X.center / cs.X
+X.centerscale
+```
+
+```{r}
+cs.W <- centroid.size(W)
+cs.W
+W.centerscale <- W.center / cs.W
+W.centerscale
+```
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.centerscale, W.centerscale),
+	asp = 1, xlab = '', ylab = '', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (X.centerscale, X.centerscale[1, ]), type = 'b', pch = 19)
+points(rbind (W.centerscale, W.centerscale [1, ]), type = 'b', pch = 15)
+text (0, 0.05, labels = expression(X[cs]))
+text (0, -0.05, labels = expression(W[cs]))
+```
+
+</div>
+
+## Rotação
+
+<div class='columns-2'>
+
+<div class='centered'>
+![Rotação](rotation.jpg)
+</div>
+
+O que nós queremos é encontrar o ângulo $\theta$ que, ao rotacionar o
+triângulo W, minimiza a soma dos quadrados das distâncias $d_1$, $d_2$
+e $d_3$.
+
+</div>
+
+## Bibliografia {.smaller}
+

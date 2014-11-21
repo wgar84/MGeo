@@ -1,6 +1,4 @@
 require (knitr)
 require (rmarkdown)
-require (ggplot2)
-require (geomorph)
 
-render('presGPA.Rmd')
+render('presGPA.Rmd', 'all')
