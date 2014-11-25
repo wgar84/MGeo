@@ -1,6 +1,7 @@
 require (knitr)
 require (rmarkdown)
-require (ggplot2)
-require (geomorph)
+require (plyr)
 
 render('presGPA.Rmd')
+browseURL('presGPA.html', browser='google-chrome')
+
