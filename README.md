@@ -123,3 +123,13 @@ $ sudo apt-get install r-cran-rgl
 
 Após essa instalação, pode-se tentar novamente instalar o _shapes_ e o
 _geomorph_ diretamente pelo R.
+
+O *geomorph* também depende do pacote *jpeg*, e este necessita de
+bibliotecas de manipulação de arquivos .jpg. Caso a instalação do
+*geomorph* falhe, instale esta biblioteca no terminal:
+
+```{shell}
+$ sudo apt-get install libjpeg8-dev
+```
+
+Após este passo, tente novamente instalar o *geomorph*.
