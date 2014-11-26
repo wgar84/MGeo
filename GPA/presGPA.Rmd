@@ -1,23 +1,23 @@
 ---
 title: "Generalized Procrustes Analysis"
-subtitle: "Morfometria Geométrica - Aula 2"
-author: Guilherme Garcia
-date: 18 de Novembro de 2014
-logo: '../Figuras/logo.jpg'
-output:	
-  ioslides_presentation:
-  mathjax: default
-  widescreen: true
-  incremental: true
-  toc: true
-bibliography: '../cursoGM.bib'
+subtitle: Morfometria Geométrica - Aula 2
+author: "Guilherme Garcia"
+logo: ../Figuras/logo.jpg
+date: "18 de Novembro de 2014"
+output:
+  ioslides_presentation: 
+    mathjax: default
+    toc: yes
+bibliography: ../cursoGM.bib
 ---
 
 # Preliminares
 
-```{r, echo = FALSE}
+```{r load_pack, include = FALSE}
 require(shapes)
+require(mvnorm)
 require(geomorph)
+require(ggplot2)
 ```
 
 ## O que é a GPA? 
@@ -69,9 +69,9 @@ para cada uma das $m$ dimensões.
 ----
 
 ```{r}
-tri.ex <- matrix(c(-1, 1, 0, 1, 1, -1), nrow = 3, byrow = T)
-tri.ex
-colMeans(tri.ex)
+X <- matrix(c(-1, -1, 1, -1, 0, 1), nrow = 3, byrow = T)
+X
+colMeans(X)
 ```
 
 ## Tamanho do Centróide {.flexbox .vcenter .hcenter}
@@ -87,7 +87,7 @@ CS (X) = $\sqrt{L1^2 + L2^2 + L3^2}$
 ----
 
 ```{r}
-centroid.size(tri.ex)
+centroid.size(X)
 ```
 
 Assim, o tamanho do centróide é a variável
@@ -115,10 +115,316 @@ de uma configuração pelo tamanho do centróide.
 
 ```{r}
 ### <b>
-tri.ex.norm <- tri.ex / centroid.size(tri.ex)
+X.norm <- X / centroid.size(X)
 ### </b>
-tri.ex.norm
-centroid.size(tri.ex.norm)
+X.norm
+centroid.size(X.norm)
 ```
 
-## Bibliografia
+## Exemplo Mínimo {.smaller .build}
+
+Vamos seguir os passos referentes à GPA no exemplo mínimo de dois
+triângulos. Neste caso, o procedimento é chamado de
+"Ordinary Procrustes Analysis".
+
+$$
+X = \begin{bmatrix}
+	-1 & -1 \\
+	1 & -1 \\
+	0 & 1 \\
+	\end{bmatrix}
+\qquad	
+W = \begin {bmatrix}
+	1.07 & -1.64 \\
+	3.10 & -0.72 \\
+	1.55 & 0.82 \\
+	\end{bmatrix}
+$$
+	
+<div class='centered'>
+![](twotri.jpg)
+</div>
+
+<div class='notes'>
+
+Caso você precise executar esse procedimento no R, existe uma função
+chamada *procOPA* no pacote *shapes*.
+
+</div>
+
+## Translação {.smaller .build}
+
+Esta operação lida com aquela variação proveniente do
+posicionamento.
+
+```{r}
+X
+W <- matrix (c(1.07, -1.64, 3.1, -0.72, 1.55, 0.82),  nrow = 3, byrow = TRUE)
+W
+```
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X, W), asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-2, 1, 3))
+points(rbind (X, X[1, ]), type = 'b', pch = 19)
+points(rbind (W, W [1, ]), type = 'b', pch = 15)
+text (0, -1/3, labels = 'X')
+text (colMeans (W), labels = 'W')
+```
+
+</div>
+
+---
+
+A operação é relativamente simples: nós apenas subtraímos a posição do
+centróide de cada configuração de suas coordenadas, efetivamente
+deslocando o centróide de todas as configurações para o par $(0, 0)$.
+
+<div class='centered'>
+```{r, fig.width = 4, fig.height = 4, echo = FALSE}
+par(mar = c(0, 0, 0, 0))
+W.center <- scale(W, center = TRUE, scale = FALSE)
+plot (rbind (W, W.center), asp = 1, xlab = '', ylab = '', col = 'white',
+      yaxt = 'n', xaxt = 'n', bty = 'n')
+points(rbind (W, W[1, ]), type = 'b', pch = 19, col = 'black')
+points(rbind (W.center, W.center[1, ]), type = 'b', pch = 19, col = 'lightgrey')
+arrows(W [, 1], W [, 2], W.center [, 1], W.center [, 2], lwd = 3, length = 0.15)
+text (1.7, -.71, labels = 'W')
+text (0, 0, labels = expression(W[c]))
+```
+</div>
+
+## {.smaller}
+
+A função *scale* dá conta de fazer isso:
+
+```{r}
+X.center <- scale(X, center = TRUE, scale = FALSE)
+X.center
+W.center <- scale(W, center = TRUE, scale = FALSE)
+W.center
+```
+
+<div class='notes'>
+
+Algumas funções produzem objetos que possuem atributos. Neste caso, a
+função *scale* subtrai a posição do centróide original e retorna o
+objeto *centralizado*. No entanto, ela retorna também um atributo
+deste objeto, que se refere à posição original do centróide.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.center, W.center),
+	asp = 1, xlab = 'X', ylab = 'Y',
+	col = 'white', yaxp = c(-2, 1, 3), xaxp = c(-1, 1, 2))
+points(rbind (X.center, X.center[1, ]), type = 'b', pch = 19)
+points(rbind (W.center, W.center [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[c]), expression(W[c])), bty = 'n')
+```
+
+</div>
+
+## Escalonamento {.smaller .build}
+
+Vamos escalonar ambos $X$ e $W$, desta vez guardando o $CS$ de cada configuração.
+
+<div class='columns-2'>
+
+```{r}
+cs.X <- centroid.size(X)
+cs.X
+X.centerscale <- X.center / cs.X
+X.centerscale
+```
+
+```{r}
+cs.W <- centroid.size(W)
+cs.W
+W.centerscale <- W.center / cs.W
+W.centerscale
+```
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.centerscale, W.centerscale),
+	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (X.centerscale, X.centerscale[1, ]), type = 'b', pch = 19)
+points(rbind (W.centerscale, W.centerscale [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[cs]), expression(W[cs])), bty = 'n')
+```
+
+</div>
+
+## Rotação
+
+<div class='columns-2'>
+
+<div class='centered'>
+![Rotação](rotation.jpg)
+</div>
+
+O que nós queremos é encontrar o ângulo $\theta$ que, ao rotacionar o
+triângulo $W$, minimiza a quantidade  
+  
+$$D = \sqrt{d_1^2 + d_2^2 + d_3^2}$$
+
+</div>
+
+---
+
+```{r, fig.width = 8, fig.height = 6, echo = FALSE}
+procDist <- function (theta, A, B)
+  {
+    R.mat <- array(c(cos (theta), sin (theta), -sin(theta), cos(theta)), c(2, 2))
+    B.rot <- B %*% R.mat
+    D <- A - B.rot
+    d <- rowSums (D^2)
+    sqrt (sum (d))
+  }
+par (mar = c(6, 6, 1, 1))
+plot (aaply (seq(0, 2*pi, length.out = 180), 1,
+	procDist, A = X.centerscale, B = W.centerscale) ~
+	seq(0, 2*pi, length.out = 180), type = 'l', xaxt = 'n', ylab = 'D',
+	xlab = expression (theta), cex.lab = 3)
+axis(1, at = seq (0, 2*pi, length.out = 5), labels = c (0, 45, 90, 135, 180))
+abline (v = 20 * pi / 180, lty = 3, col= 'red')
+```
+
+<div class='notes'>
+
+No caso dos triângulos $X$ e $W$, esse ângulo é um pouco menor que 20º.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+OPA <- procOPA (X.centerscale, W.centerscale)
+plot (rbind (OPA $ Ahat, OPA $ Bhat),
+	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (OPA $ Ahat, OPA $ Ahat [1, ]), type = 'b', pch = 19)
+points(rbind (OPA $ Bhat, OPA $ Bhat [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[csr]), expression(W[csr])), bty = 'n')
+```
+
+</div>
+
+## OPA para GPA
+
+No caso de mais de dois objetos, o procedimento chama-se GPA de fato.
+
+> - Escalonamento e Translação: Idênticos
+
+> - Rotação: Processo Iterativo
+
+<div class='notes'>
+
+O processo se inicia a partir de duas formas, que são rotacionadas de
+maneira idêntica a que vimos, e uma forma média é calculada. Depois, a
+cada iteração, uma nova forma é adicionada e rotacionada sobre a forma
+média calculada na iteração anterior. Uma nova forma média é
+calculada, e o processo continua.
+
+</div>
+
+## Propriedades do Espaço da Forma
+
+Em duas dimensões, é necessário estimar, para cada configuração de
+marcos, quatro parâmetros:
+
+> - Posição do Centróide ($x$, $y$)
+
+> - Tamanho do Centróide
+
+> - Ângulo de Rotação
+
+## {.build}
+
+Assim sendo, o procedimento tem duas consequências importantes:
+
+- Quatro graus de liberdade são perdidos
+
+- A geometria do morfoespaço gerado pelas transformações não é euclidiana
+	(por conta da restrição $CS(X_i) = 1$)
+
+Vamos ilustrar estas propriedades em um exemplo onde construímos 10000
+triângulos.
+
+---
+
+```{r setup, include = FALSE}
+knit_hooks$set(webgl = hook_webgl)
+mil.tri <- array (0, c(3, 2, 10000))
+mil.tri [2, 1, ] <- -0.5
+mil.tri [3, 1, ] <- 0.5
+mil.tri [1, 2, ] <- rep (seq(0, 1, length.out = 100), times = 100)
+mil.tri [1, 1, ] <- rep (seq(-1, 1, length.out = 100), each = 100)
+```
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6.5, fig.height = 6.5}
+par(mar = c(7.1, 4.1, 0.1, 2.1))
+plot(t (mil.tri [1, , ]), pch = 20, col = rainbow (10000),
+	xlab = 'X', ylab = 'Y', cex = 0.7)
+points(x = c(-.5, .5), y = c(0, 0), type = 'b', pch = 20, cex = 2, lwd = 8)
+points (mil.tri [1:2, , 4034], type = 'b', pch = 20, cex = 2, lwd = 8)
+points (mil.tri [c(1,3), , 4034], type = 'b', pch = 20, cex = 2, lwd = 8)
+```
+
+</div>
+
+<div class='notes'>
+
+Lembrar que esta não é uma cobertura total do espaço.
+
+</div>
+
+---
+
+<div class='centered'>
+![](unitshapespace.jpg)
+</div>
+
+## Espaço Tangente
+
+<div class='centered'>
+
+```{r, fig.width = 6.5, fig.height = 6.5, echo = FALSE}
+par(mar = c(9.1, 4.1, 0.1, 2.1))
+plot(tri.pca $ x [, 1:2], col = rainbow(10000), pch = 20, cex = 0.7,
+	xlab = '', ylab = '')
+```
+
+</div>
+
+<div class='notes'>
+
+Nossa expectativa é que a variação morfológica que nós encontramos
+fica próxima ao ponto onde o espaço tangente toca a variedade.
+
+</div>
+
+
+## Bibliografia {.smaller}
+

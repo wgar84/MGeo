@@ -1,99 +1,370 @@
 ---
 title: "Generalized Procrustes Analysis"
-subtitle: "Morfometria Geométrica - Aula 2"
-author: Guilherme Garcia
-date: 18 de Novembro de 2014
-logo: '../Figuras/logo.jpg'
-output:	
-  ioslides_presentation:
-  mathjax: default
-  widescreen: true
-  incremental: true
-  toc: true
+subtitle: Morfometria Geom??trica - Aula 2
+author: "Guilherme Garcia"
+logo: ../Figuras/logo.jpg
+date: "18 de Novembro de 2014"
+output:
+  ioslides_presentation: 
+    mathjax: default
+    toc: yes
+bibliography: ../cursoGM.bib
 ---
 
 # Preliminares
 
-```{r, echo = FALSE}
+```{r load_pack, include = FALSE}
 require(shapes)
+require(mvnorm)
 require(geomorph)
+require(ggplot2)
 ```
 
-## O que é a GPA? {.vcenter}
+## O que ?? a GPA? 
 
-A GPA ('Generalized Procrustes Analysis') consiste em realizar uma série de
-operações sobre um conjunto de configurações de marcos, de maneira a remover deste
-conjunto aquela variação que não é informativa do ponto de vista biológico:
+A GPA ('Generalized Procrustes Analysis') consiste em realizar uma s??rie de
+opera????es sobre um conjunto de configura????es de marcos, de maneira a remover deste
+conjunto aquela varia????o que n??o ?? informativa do ponto de vista biol??gico:
 
-> - Translação
+> - Transla????o
 
-> - Rotação
+> - Rota????o
 
 > - Escala
 
-## Mas... {.vcenter .build}
+## Mas... {.build}
 
-Variação em escala é importante do ponto de vista biológico.
-O que a GPA nos permite no caso é separar a variação associada à
-escala daquela associada à forma.
+Varia????o em escala ?? importante do ponto de vista biol??gico.
 
-(e bem, essa distinção será importante na aula de Alometria...)
+A GPA nos permite separar a varia????o associada ?? escala daquela
+associada ?? forma, de modo que ?? poss??vel estimar efeitos alom??tricos
+sobre a varia????o de forma.
 
-# Passo a Passo {.flexbox .vcenter .hcenter}
+**Alometria**: associa????o entre um car??ter de interesse (morfol??gico, fisiol??gico,
+ou at?? mesmo ecol??gico) e tamanho corporal [@huxley_problems_1932].
 
-* $k$: número de marcos anatômicos
-* $m$: dimensões
-* $n$: número de indivíduos
+<div class='notes'>
 
-## Centróide {.flexbox .vcenter .hcenter}
+escala log-log
 
-![Posição do Centróide](centroid.jpg)
+</div>
+
+# Passo a Passo 
+
+* $k$: n??mero de marcos anat??micos
+* $m$: dimens??es
+* $n$: n??mero de indiv??duos
+
+## Centr??ide {.flexbox .vcenter .hcenter}
+
+![Posi????o do Centr??ide](centroid.jpg)
 
 $$C_j = \frac{1}{k}\sum_{i=1}^{k}X_{ij}$$
 
 <div class='notes'>
-Média aritmética simples entre os valores em cada marco,
-para cada uma das $m$ dimensões.
+M??dia aritm??tica simples entre os valores em cada marco,
+para cada uma das $m$ dimens??es.
 </div>
 
 ----
 
 ```{r}
-tri.ex <- matrix(c(-1, 1, 0, 1, 1, -1), nrow = 3, byrow = T)
-tri.ex
-colMeans(tri.ex)
+X <- matrix(c(-1, -1, 1, -1, 0, 1), nrow = 3, byrow = T)
+X
+colMeans(X)
 ```
 
-## Tamanho do Centróide {.flexbox .vcenter .hcenter}
+## Tamanho do Centr??ide {.flexbox .vcenter .hcenter}
 
-![Tamanho do Centróide](centroidsize.jpg)
+![Tamanho do Centr??ide](centroidsize.jpg)
 
 $$CS(X) = \sqrt{\sum_{i=1}^{k}\sum_{j=1}^{m}(X_{ij} - C_j)^2}$$
 
 <div class='notes'>
-$\sqrt{L1^2 + L2^2 + L3^2}$
+CS (X) = $\sqrt{L1^2 + L2^2 + L3^2}$
 </div>
 
 ----
 
 ```{r}
-centroid.size(tri.ex)
+centroid.size(X)
 ```
 
-Assim, o tamanho do centróide é a variável
-que representa a variação de escala.
+Assim, o tamanho do centr??ide ?? a vari??vel
+que representa a varia????o de escala.
+
+@bookstein_morphometric_1991 demonstrou que o $CS$ ?? uma vari??vel
+"pura" de tamanho.
+
+<div class='notes'>
+
+Isso significa que, dada uma popula????o de configura????es desprovida de
+rela????es alom??tricas, o CS necessariamente ir?? possuir correla????es
+nulas com as vari??veis de forma. Outras medidas que podem ser
+entendidas como tamanho, como por exemplo o comprimento total do
+cr??nio, podem ter correla????es com as vari??veis de forma, de modo que
+esse tipo de medida ?? na verdade uma combina????o entre escala e forma. 
+
+</div>
 
 ----
 
 Para remover o efeito do tamanho das coordenadas cartesianas,
 podemos simplesmente dividir cada coordenada de cada *landmark*
-de uma configuração pelo tamanho do centróide.
+de uma configura????o pelo tamanho do centr??ide.
 
 ```{r}
 ### <b>
-tri.ex.norm <- tri.ex / centroid.size(tri.ex)
+X.norm <- X / centroid.size(X)
 ### </b>
-tri.ex.norm
-centroid.size(tri.ex.norm)
+X.norm
+centroid.size(X.norm)
 ```
+
+## Exemplo M??nimo {.smaller .build}
+
+Vamos seguir os passos referentes ?? GPA no exemplo m??nimo de dois
+tri??ngulos. Neste caso, o procedimento ?? chamado de
+"Ordinary Procrustes Analysis".
+
+$$
+X = \begin{bmatrix}
+	-1 & -1 \\
+	1 & -1 \\
+	0 & 1 \\
+	\end{bmatrix}
+\qquad	
+W = \begin {bmatrix}
+	1.07 & -1.64 \\
+	3.10 & -0.72 \\
+	1.55 & 0.82 \\
+	\end{bmatrix}
+$$
+	
+<div class='centered'>
+![](twotri.jpg)
+</div>
+
+<div class='notes'>
+
+Caso voc?? precise executar esse procedimento no R, existe uma fun????o
+chamada *procOPA* no pacote *shapes*.
+
+</div>
+
+## Transla????o {.smaller .build}
+
+Esta opera????o lida com aquela varia????o proveniente do
+posicionamento.
+
+```{r}
+X
+W <- matrix (c(1.07, -1.64, 3.1, -0.72, 1.55, 0.82),  nrow = 3, byrow = TRUE)
+W
+```
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X, W), asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-2, 1, 3))
+points(rbind (X, X[1, ]), type = 'b', pch = 19)
+points(rbind (W, W [1, ]), type = 'b', pch = 15)
+text (0, -1/3, labels = 'X')
+text (colMeans (W), labels = 'W')
+```
+
+</div>
+
+---
+
+A opera????o ?? relativamente simples: n??s apenas subtra??mos a posi????o do
+centr??ide de cada configura????o de suas coordenadas, efetivamente
+deslocando o centr??ide de todas as configura????es para o par $(0, 0)$.
+
+<div class='centered'>
+```{r, fig.width = 4, fig.height = 4, echo = FALSE}
+par(mar = c(0, 0, 0, 0))
+W.center <- scale(W, center = TRUE, scale = FALSE)
+plot (rbind (W, W.center), asp = 1, xlab = '', ylab = '', col = 'white',
+      yaxt = 'n', xaxt = 'n', bty = 'n')
+points(rbind (W, W[1, ]), type = 'b', pch = 19, col = 'black')
+points(rbind (W.center, W.center[1, ]), type = 'b', pch = 19, col = 'lightgrey')
+arrows(W [, 1], W [, 2], W.center [, 1], W.center [, 2], lwd = 3, length = 0.15)
+text (1.7, -.71, labels = 'W')
+text (0, 0, labels = expression(W[c]))
+```
+</div>
+
+## {.smaller}
+
+A fun????o *scale* d?? conta de fazer isso:
+
+```{r}
+X.center <- scale(X, center = TRUE, scale = FALSE)
+X.center
+W.center <- scale(W, center = TRUE, scale = FALSE)
+W.center
+```
+
+<div class='notes'>
+
+Algumas fun????es produzem objetos que possuem atributos. Neste caso, a
+fun????o *scale* subtrai a posi????o do centr??ide original e retorna o
+objeto *centralizado*. No entanto, ela retorna tamb??m um atributo
+deste objeto, que se refere ?? posi????o original do centr??ide.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.center, W.center),
+	asp = 1, xlab = 'X', ylab = 'Y',
+	col = 'white', yaxp = c(-2, 1, 3), xaxp = c(-1, 1, 2))
+points(rbind (X.center, X.center[1, ]), type = 'b', pch = 19)
+points(rbind (W.center, W.center [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[c]), expression(W[c])), bty = 'n')
+```
+
+</div>
+
+## Escalonamento {.smaller .build}
+
+Vamos escalonar ambos $X$ e $W$, desta vez guardando o $CS$ de cada configura????o.
+
+<div class='columns-2'>
+
+```{r}
+cs.X <- centroid.size(X)
+cs.X
+X.centerscale <- X.center / cs.X
+X.centerscale
+```
+
+```{r}
+cs.W <- centroid.size(W)
+cs.W
+W.centerscale <- W.center / cs.W
+W.centerscale
+```
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.centerscale, W.centerscale),
+	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (X.centerscale, X.centerscale[1, ]), type = 'b', pch = 19)
+points(rbind (W.centerscale, W.centerscale [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[cs]), expression(W[cs])), bty = 'n')
+```
+
+</div>
+
+## Rota????o
+
+<div class='columns-2'>
+
+<div class='centered'>
+![Rota????o](rotation.jpg)
+</div>
+
+O que n??s queremos ?? encontrar o ??ngulo $\theta$ que, ao rotacionar o
+tri??ngulo $W$, minimiza a quantidade  
+  
+$$D = \sqrt{d_1^2 + d_2^2 + d_3^2}$$
+
+</div>
+
+---
+
+```{r, fig.width = 8, fig.height = 6, echo = FALSE}
+procDist <- function (theta, A, B)
+  {
+    R.mat <- array(c(cos (theta), sin (theta), -sin(theta), cos(theta)), c(2, 2))
+    B.rot <- B %*% R.mat
+    D <- A - B.rot
+    d <- rowSums (D^2)
+    sqrt (sum (d))
+  }
+par (mar = c(6, 6, 1, 1))
+plot (aaply (seq(0, 2*pi, length.out = 180), 1,
+	procDist, A = X.centerscale, B = W.centerscale) ~
+	seq(0, 2*pi, length.out = 180), type = 'l', xaxt = 'n', ylab = 'D',
+	xlab = expression (theta), cex.lab = 3)
+axis(1, at = seq (0, 2*pi, length.out = 5), labels = c (0, 45, 90, 135, 180))
+abline (v = 20 * pi / 180, lty = 3, col= 'red')
+```
+
+<div class='notes'>
+
+No caso dos tri??ngulos $X$ e $W$, esse ??ngulo ?? um pouco menor que 20??.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+OPA <- procOPA (X.centerscale, W.centerscale)
+plot (rbind (OPA $ Ahat, OPA $ Bhat),
+	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (OPA $ Ahat, OPA $ Ahat [1, ]), type = 'b', pch = 19)
+points(rbind (OPA $ Bhat, OPA $ Bhat [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[csr]), expression(W[csr])), bty = 'n')
+```
+
+</div>
+
+## OPA para GPA
+
+No caso de mais de dois objetos, o procedimento chama-se GPA de fato.
+
+> - Escalonamento e Transla????o: Id??nticos
+
+> - Rota????o: Processo Iterativo
+
+<div class='notes'>
+
+O processo se inicia a partir de duas formas, que s??o rotacionadas de
+maneira id??ntica a que vimos, e uma forma m??dia ?? calculada. Depois, a
+cada itera????o, uma nova forma ?? adicionada e rotacionada sobre a forma
+m??dia calculada na itera????o anterior. Uma nova forma m??dia ??
+calculada, e o processo continua.
+
+</div>
+
+## Espa??o da Forma {.build}
+
+Em duas dimens??es, ?? necess??rio estimar, para cada configura????o de
+marcos, quatro par??metros:
+
+- Posi????o do Centr??ide ($x$, $y$)
+
+- Tamanho do Centr??ide
+
+- ??ngulo de Rota????o
+
+
+
+---
+
+<div class='centered'>
+![](unitshapespace.jpg)
+</div>
+
+## Bibliografia {.smaller}
 
