@@ -1,4 +1,8 @@
-# Curso Básico de Morfometria Geométrica
+---
+title: Curso Básico de Morfometria Geométrica
+date: 7-8 de dezembro de 2014
+fontfamily: bookman
+---
 
 Este curso intenciona oferecer uma introdução básica aos conceitos e
 técnicas de Morfometria Geométrica, de maneira a instrumentar o aluno
@@ -21,10 +25,10 @@ Morfometria Geométrica.
 ### R
 
 Inicialmente, você deve instalar o **R** no seu computador. Você pode
-encontrá-lo no sítio http://www.r-project.org, e lá existem instruções
+encontrá-lo no sítio <http://www.r-project.org>, e lá existem instruções
 (em inglês) para instalá-lo em vários sistemas operacionais
 diferentes. Em suma, vá a um dos espelhos do *Comprehensive R Archive
-Network* (CRAN), por exemplo http://brieger.esalq.usp.br/CRAN/, e siga
+Network* (CRAN), por exemplo <http://brieger.esalq.usp.br/CRAN/>, e siga
 os links de download para Windows, MAC OS ou Linux e instale o pacote
 referente ao seu sistema operacional. Usuários de Linux provavelmente
 possuem um gerenciador de pacotes instalado em seu sistema, como por
@@ -35,7 +39,7 @@ A instalação básica do R no Windows ou MAC OS providencia uma
 interface básica para execução de rotinas; no entanto, recomendamos a
 instalação do **R Studio**, uma interface bastante intuitiva para
 utilizarmos o R. Esta interface pode ser encontrada no sítio
-http://www.rstudio.com para Windows, MAC OS ou Linux.
+<http://www.rstudio.com> para Windows, MAC OS ou Linux.
 
 O curso foi pensado para pessoas que não são familiarizadas com o R;
 não esperamos que você seja, a princípio, capaz de escrever rotinas na
@@ -48,7 +52,7 @@ vamos introduzir alguns conceitos que são cruciais para o entendimento
 das rotinas que estamos disponibilizando aqui.
 
 Para você começar a entender a linguagem antes do curso iniciar,
-recomendamos o sítio http://ecologia.ib.usp.br/bie5782/, da disciplina
+recomendamos o sítio <http://ecologia.ib.usp.br/bie5782/>, da disciplina
 básica de R oferecida pelo Departamento de Ecologia do IB-USP. O link
 "Atividades Preparatórias" oferece um introdução compreensiva da
 linguagem.
@@ -67,17 +71,14 @@ providencia uma maneira de visualizarmos e manipularmos gráficos em
 três dimensões no R. Em princípio, podemos tentar instalar estes
 pacotes usando os comandos
 
-```{R}
-> install.packages('geomorph', dependencies = TRUE)
-> install.packages('shapes', dependencies = TRUE)
-```
+	> install.packages('geomorph', dependencies = TRUE) 
+	> install.packages('shapes', dependencies = TRUE)
+
 
 e, se tudo estiver bem, podemos carregá-los
 
-```{R}
-> require(geomorph)
-> require(shapes)
-```
+	> require(geomorph)
+	> require(shapes)
 
 No entanto, a instalação destes pacotes pode apresentar erros, de modo
 a impedí-los de serem carregados. Apresentamos aqui algumas soluções
@@ -101,9 +102,7 @@ Abra um terminal no MAC OS (você pode pressionar
 *Command + Espaço*, digitar 'terminal' no *Spotlight* e pressionar
 Enter) e digite
 
-```{bash}
-$ sudo ln -sf /opt/X11 /usr/X11
-```
+	$ sudo ln -sf /opt/X11 /usr/X11
 
 O terminal irá pedir sua senha de usuário. O que você fez foi criar um
 link na pasta */usr* para a pasta */opt/X11*. Dessa forma, o R deverá
@@ -117,9 +116,9 @@ Em geral, problemas de instalação no Ubuntu e derivações deste são
 resolvidos instalando-se a versão pré-compilada do *rgl* disponível
 nos repositórios destas distribuições.
 
-```{shell}
-$ sudo apt-get install r-cran-rgl
-```
+
+	$ sudo apt-get install r-cran-rgl
+
 
 Após essa instalação, pode-se tentar novamente instalar o _shapes_ e o
 _geomorph_ diretamente pelo R.
@@ -128,8 +127,6 @@ O *geomorph* também depende do pacote *jpeg*, e este necessita de
 bibliotecas de manipulação de arquivos .jpg. Caso a instalação do
 *geomorph* falhe, instale esta biblioteca no terminal:
 
-```{shell}
-$ sudo apt-get install libjpeg8-dev
-```
+	$ sudo apt-get install libjpeg8-dev
 
 Após este passo, tente novamente instalar o *geomorph*.

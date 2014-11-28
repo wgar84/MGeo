@@ -1,6 +1,7 @@
 require (knitr)
 require (rmarkdown)
 require (plyr)
+require (Morphometrics)
 
 render('presGPA.Rmd')
 browseURL('presGPA.html', browser='google-chrome')
@@ -34,3 +35,20 @@ aspect3d('iso')
 writeWebGL()
 
 plot(tri.pca $ x [, 1:2], col = rainbow(10000), pch = 20 )
+
+Norm.tan <- aaply(tri.pca $ x [, 1:2], 1, Norm)
+ProcD <- tri.gpa $ rho
+
+plot (Norm.tan ~ ProcD, pch = 20, col = rainbow(10000)) ### Ortogonal
+abline(a=0, b = 1)
+
+mil.stereo.gpa <- procGPA(mil.tri, tangentcoords='partial')
+
+mil.stereo.pca <- prcomp (t(mil.stereo.gpa $ tan), retx = TRUE)
+
+plot (mil.stereo.pca $ x [, 1:2], col = rainbow (10000), pch = 20)
+
+Norm.stereo <- aaply (mil.stereo.pca $ x [, 1:2], 1, Norm)
+
+plot (Norm.stereo ~ ProcD, pch = 20, col = rainbow(10000)) ### Ortogonal
+abline(a=0, b = 1)

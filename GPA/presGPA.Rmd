@@ -6,8 +6,10 @@ logo: ../Figuras/logo.jpg
 date: "18 de Novembro de 2014"
 output:
   ioslides_presentation: 
-    mathjax: default
-    toc: yes
+    mathjax: local
+    self_contained: false
+    toc: true
+    fig_caption: yes
 bibliography: ../cursoGM.bib
 ---
 
@@ -26,11 +28,11 @@ A GPA ('Generalized Procrustes Analysis') consiste em realizar uma série de
 operações sobre um conjunto de configurações de marcos, de maneira a remover deste
 conjunto aquela variação que não é informativa do ponto de vista biológico:
 
-> - Translação
+> - Translação;
 
-> - Rotação
+> - Rotação;
 
-> - Escala
+> - Escala.
 
 ## Mas... {.build}
 
@@ -49,15 +51,17 @@ escala log-log
 
 </div>
 
-# Passo a Passo 
+# Passo a Passo
 
 * $k$: número de marcos anatômicos
 * $m$: dimensões
 * $n$: número de indivíduos
 
+@zelditch_geometric_2004
+
 ## Centróide {.flexbox .vcenter .hcenter}
 
-![Posição do Centróide](centroid.jpg)
+![](centroid.jpg)
 
 $$C_j = \frac{1}{k}\sum_{i=1}^{k}X_{ij}$$
 
@@ -76,7 +80,7 @@ colMeans(X)
 
 ## Tamanho do Centróide {.flexbox .vcenter .hcenter}
 
-![Tamanho do Centróide](centroidsize.jpg)
+![](centroidsize.jpg)
 
 $$CS(X) = \sqrt{\sum_{i=1}^{k}\sum_{j=1}^{m}(X_{ij} - C_j)^2}$$
 
@@ -339,57 +343,62 @@ No caso de mais de dois objetos, o procedimento chama-se GPA de fato.
 
 <div class='notes'>
 
-O processo se inicia a partir de duas formas, que são rotacionadas de
-maneira idêntica a que vimos, e uma forma média é calculada. Depois, a
-cada iteração, uma nova forma é adicionada e rotacionada sobre a forma
-média calculada na iteração anterior. Uma nova forma média é
-calculada, e o processo continua.
+1. arbitrariamente escolher uma forma de referência
+   (normalmente, selecionando-a dentre os indivíduos disponíveis);
+2. sobrepor todos os indivíduos à forma de referência atual;
+3. calcular a forma média do conjunto atual de formas sobrepostas;
+4. se a Distância de Procrustes entre a forma média e a referência está
+   acima de um limite, substituir a forma de referência pela média e
+   voltar ao passo 2; senão, terminar.
 
 </div>
 
-## Propriedades do Espaço da Forma
+## Propriedades do Espaço da Forma {.build}
 
 Em duas dimensões, é necessário estimar, para cada configuração de
 marcos, quatro parâmetros:
 
-> - Posição do Centróide ($x$, $y$)
+- Posição do Centróide ($x_C$, $y_C$);
 
-> - Tamanho do Centróide
+- Tamanho do Centróide ($CS$);
 
-> - Ângulo de Rotação
+- Ângulo de Rotação ($\theta$).
 
-## {.build}
+Em geral, estimamos $m + \frac{m(m-1)}{2} + 1$ parâmetros. Por
+exemplo, em três dimensões, sete parâmetros são estimados.
+
+<div class='notes'>
+
+- $m$ pela translação
+- $\frac{m(m-1)}{2}$ pela rotação
+- um pelo escalonamento
+
+</div>
+
+
+## Propriedades do Espaço da Forma {.build}
 
 Assim sendo, o procedimento tem duas consequências importantes:
 
-- Quatro graus de liberdade são perdidos
+- $m + \frac{m(m-1)}{2} + 1$ graus de liberdade são perdidos;
 
 - A geometria do morfoespaço gerado pelas transformações não é euclidiana
-	(por conta da restrição $CS(X_i) = 1$)
+  (por conta da restrição $CS(X_i) = 1$).
 
 Vamos ilustrar estas propriedades em um exemplo onde construímos 10000
-triângulos.
+triângulos, submetendo estes à GPA.
 
----
-
-```{r setup, include = FALSE}
-knit_hooks$set(webgl = hook_webgl)
-mil.tri <- array (0, c(3, 2, 10000))
-mil.tri [2, 1, ] <- -0.5
-mil.tri [3, 1, ] <- 0.5
-mil.tri [1, 2, ] <- rep (seq(0, 1, length.out = 100), times = 100)
-mil.tri [1, 1, ] <- rep (seq(-1, 1, length.out = 100), each = 100)
-```
+## Propriedades do Espaço da Forma
 
 <div class='centered'>
 
-```{r, echo = FALSE, fig.width = 6.5, fig.height = 6.5}
+```{r, echo = FALSE, fig.width = 5.5, fig.height = 5.5}
 par(mar = c(7.1, 4.1, 0.1, 2.1))
 plot(t (mil.tri [1, , ]), pch = 20, col = rainbow (10000),
 	xlab = 'X', ylab = 'Y', cex = 0.7)
-points(x = c(-.5, .5), y = c(0, 0), type = 'b', pch = 20, cex = 2, lwd = 8)
-points (mil.tri [1:2, , 4034], type = 'b', pch = 20, cex = 2, lwd = 8)
-points (mil.tri [c(1,3), , 4034], type = 'b', pch = 20, cex = 2, lwd = 8)
+points(x = mil.tri [2:3, , 4034], type = 'b', pch = 20, cex = 2, lwd = 5)
+points (mil.tri [1:2, , 4034], type = 'b', pch = 20, cex = 2, lwd = 5)
+points (mil.tri [c(1,3), , 4034], type = 'b', pch = 20, cex = 2, lwd = 5)
 ```
 
 </div>
@@ -400,20 +409,73 @@ Lembrar que esta não é uma cobertura total do espaço.
 
 </div>
 
----
+## Gráfico 3D!!!
+
+Nesse caso, nos valemos do fato que, ao aplicar a GPA sobre estes
+objetos, o morfoespaço gerado possui apenas duas dimensões, sendo
+possível observamos esse espaço (com a ajuda do *rgl*!).
+
+<div class='notes'>
+
+Para triângulos, três vértices em duas dimensões representam seis
+variáveis. Excluíndo-se quatro g.l.s, sobram duas dimensões de
+variação de forma. Note que, apesar do espaço possuir apenas duas
+dimensões, ele está inserido no espaço ambiente
+tridimensional. Essencialmente, ele é uma casca de esfera (por conta
+da restrição $CS(X_i) = 1$).
+
+</div>
+
+## Propriedades do Espaço da Forma 
 
 <div class='centered'>
 ![](unitshapespace.jpg)
+</div>
+
+## Espaço Tangente {.smaller}
+
+<div class='centered'>
+![](projection.png)
+</div>
+
+> - Distância de Procrustes: Distância (em arco) entre duas formas;
+
+> - Por exemplo, a distância entre a forma de referência (média) $A$ e
+>   uma forma $B$ qualquer ($\rho$);
+
+> - Diferentes projeções podem ser definidas:
+	- Ortogonal ($C$);
+	- Estereográfica ($D$).
+
+<div class='notes'>
+
+No caso, $\rho$ pode ser entendido como o tamanho do arco se medido em
+radianos sobre uma bola unitária.
+
+</div>
+
+## Espaço Tangente 
+
+<div class='centered'>
+
+![Projeção Estereográfica](stereoearth.jpg)
+
+</div>
+
+<div class='notes'>
+
+Note que, a medida que nós nos afastamos do centro, as distorções aumentam.
+
 </div>
 
 ## Espaço Tangente
 
 <div class='centered'>
 
-```{r, fig.width = 6.5, fig.height = 6.5, echo = FALSE}
-par(mar = c(9.1, 4.1, 0.1, 2.1))
+```{r, fig.width = 6.5, fig.height = 4.5, echo = FALSE, fig.cap = 'Projeção Ortogonal'}
+par(mar = c(4.1, 4.1, 0.2, 2.1))
 plot(tri.pca $ x [, 1:2], col = rainbow(10000), pch = 20, cex = 0.7,
-	xlab = '', ylab = '')
+	xlab = '', ylab = '', asp = 1, yaxp = c(-.2, .6, 4))
 ```
 
 </div>
@@ -425,6 +487,132 @@ fica próxima ao ponto onde o espaço tangente toca a variedade.
 
 </div>
 
+## Espaço Tangente {.build}
+
+Assim, podemos comparar a Distância de Procrustes $\rho$ com a
+distância euclidiana calculada no espaço tangente, observando que,
+quanto mais distantes estivermos da forma de referência, maiores serão
+as diferenças entre as duas distâncias.
+
+<div class='centered'>
+![](projection.png)
+</div>
+
+Vamos observar a relação entre $\rho$ e $AC$ no nosso exemplo.
+
+---
+
+<div class='centered'>
+
+```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+par (mar = c(7.1, 4.1, 0.1, 2.1))
+plot (Norm.tan ~ ProcD, pch = 20, col = rainbow(10000),
+	xlab = expression (rho), ylab = 'AC')
+abline(a=0, b = 1, lwd = 3)
+```
+
+</div>
+
+<div class='notes'>
+
+A medida que nos afastamos do centro, a distância no espaço da
+tangente subestima a distância geodésica $\rho$.
+
+</div>
+
+## Consequencias Práticas da GPA
+
+> - TODA inferência estatística é construída sobre a premissa que o
+>   espaço que as observações ocupam é euclidiano. Assim, se queremos
+>   utilizar técnicas paramétricas de estatística, temos de usar
+>   projeções no espaço da tangente.
+
+> - Nossas variáveis de forma (resíduos da tangente) sempre terão uma
+>   dimensionalidade menor do que aquela representada pelo número de variáveis.
+
+> - Dessa forma, para lidarmos com variáveis de forma do ponto de
+>   vista da inferência estatística, devemos nos valer de técnicas de
+>   redução de dimensionalidade (PCA, TPS).
+
+<div class='notes'>
+
+- mas, a princípio, toda variação morfológica que observamos é
+  confinada ao entorno da forma média, de maneira que as distorções
+  encontradas na periferia provavelmente não interferem na descrição
+  de variação de forma.
+
+- em geral, você não precisa se preocupar tanto com a questão de
+  projetar no espaço tangente. a função *gpagen* já projeta pra você.
+
+</div>
+
+# Thin Plate Splines
+
+## {.smaller}
+
+<div class='columns-2'>
+
+<div class='centered'>
+![](thompson17.jpg)
+</div>
+
+<div class='centered'>
+![D'Arcy Thompson](thompson.jpg)
+</div>
+
+<div class='centered'>
+![](DWT.jpg)
+</div>
+
+@thompson_growth_1917 propõe a representação de formas através de grades de
+deformação.
+
+</div>
+
+## {.smaller}
+
+<div class='centered'>
+![](bookstein89.jpg)
+</div>
+
+<div class='columns-2'>
+
+<div class='centered'>
+![Fred Bookstein](bookstein.jpg)
+</div>
+
+@bookstein_principal_1989 introduziu o formalismo físico-matemático para a
+estimativa de grades de deformação entre uma forma de referência e uma forma-alvo.
+
+Essencialmente, o modelo subjacente ao TPS descreve transformações
+entre duas formas atráves de um modelo usado para descrever
+dobramentos em uma placa metálica fina, procurando minimizar a
+energia necessária para produzir este dobramento.
+
+</div>
+
+---
+
+<div class='centered'>
+![](refandtarget.png)
+</div>
+
+* Cinza: Referência
+* Preto: Alvo
+
+<div class='notes'>
+
+Este procedimento se comporta como uma interpolação, ou seja, procura
+descrever como a variação nos tecidos ósseos se comporta no entorno
+dos *landmarks* amostrados, recorrendo a um modelo físico para tal.
+
+</div>
+
+---
+
+<div class='centered'>
+![](vectorgrid.png)
+</div>
 
 ## Bibliografia {.smaller}
 
