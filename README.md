@@ -13,8 +13,65 @@ Morfometria Geométrica.
 
 **Responsáveis**
 - Bárbara Costa (<tafinha@gmail.com>)
-- Daniela Rossoni (<daniela.rossoni@gmail.com>)
+<!-- - Daniela Rossoni (<daniela.rossoni@gmail.com>) -->
 - Guilherme Garcia (<wgar@usp.br>)
+
+## Estrutura do Curso
+
+----- -------- -------------- ---------- --------------------------------------------
+Dia   Horário  Quem?          Como?      O Que?
+----- -------- -------------- ---------- --------------------------------------------
+07/12 08h00    Guilherme      Teórica    Introdução: Breve Histórico da Morfometria
+                                         Geométrica.
+
+      08h30    Bárbara        Teórica/   Comandos básicos no R voltados
+	                          Prática    para o Curso.
+	  
+      10h20    Bárbara        Teórica    Aquisição dos dados morfométricos:
+                                         Equipamentos, Landmarks, outlines e
+                	                     superfícies. Obtendo landmarks e
+										 semilandmarks (e os conceitos).
+										 Decisão: 2D ou 3D? A escolha dos marcadores
+										 e suas hipóteses. Homologia.
+										 
+	  11h00    Bárbara        Prática    Digitalizando marcadores em fotografia
+                                         utilizando o *geomorph*.
+
+	  11h50                              Proposta de apresentação final em grupo.
+
+	  14h00                              Suporte ao Usuário (para quem tiver tido
+	                                     problemas com instalação dos pacotes que
+                                         possa comprometer as próximas atividades).
+----- -------- -------------- ---------- --------------------------------------------
+
+----- -------- -------------- ---------- --------------------------------------------
+Dia   Horário  Quem?          Como?      Que?
+----- -------- -------------- ---------- --------------------------------------------
+      14h30    Guilherme      Teórica/   Análise Generalizada de Procrustes.
+	                          Prática    Variáveis morfométricas. Tamanho do
+                                         Centróide. Translação. Rotação.
+										 Espaços da Forma. Thin Plate Splines.
+										 Resultados gráficos e interpretação.
+                                   
+08/12 08h00    Bárbara        Teórica    Análise de Componentes Principais.
+                                         Visualização das similaridades e diferenças.
+                                         Scores, autovalores e autovetores.
+
+      08h40    Bárbara        Prática    Exemplos de reconstrução da forma
+                                         sobre components principais.
+	  
+      10h20    Guilherme      Teórica/   Alometria. Regressão.
+                              Prática
+
+      14h00    Guilherme      Teórica/   Análise de Variância.
+                              Prática
+
+      16h00    Bárbara        Teórica/   Análise Discriminante.
+                              Prática
+
+      17h30                              Apresentação Final.
+
+----- -------- -------------- ---------- --------------------------------------------
 
 ## Preliminares
 
@@ -70,7 +127,6 @@ pacotes usando os comandos
 	> install.packages('geomorph', dependencies = TRUE) 
 	> install.packages('shapes', dependencies = TRUE)
 
-
 e, se tudo estiver bem, podemos carregá-los
 
 	> require(geomorph)
@@ -81,6 +137,12 @@ a impedí-los de serem carregados. Apresentamos aqui algumas soluções
 para possíveis problemas; no entanto, no início do curso reservamos
 algum tempo para ajudar vocês a instalar estes pacotes em seu
 computador.
+
+#### Windows
+
+A princípio, a instalação no Windows não apresenta grandes
+problemas. Instale os pacotes usando os comandos acima ou utilize a
+interface do RStudio para tal.
 
 #### MAC OS 
 
@@ -112,9 +174,7 @@ Em geral, problemas de instalação no Ubuntu e derivações deste são
 resolvidos instalando-se a versão pré-compilada do *rgl* disponível
 nos repositórios destas distribuições.
 
-
 	$ sudo apt-get install r-cran-rgl
-
 
 Após essa instalação, pode-se tentar novamente instalar o _shapes_ e o
 _geomorph_ diretamente pelo R.
@@ -126,3 +186,4 @@ bibliotecas de manipulação de arquivos .jpg. Caso a instalação do
 	$ sudo apt-get install libjpeg8-dev
 
 Após este passo, tente novamente instalar o *geomorph*.
+
