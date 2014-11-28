@@ -11,12 +11,13 @@ require (geomorph)
 ### para detalhes, veja:
 ?plethodon
 
-data(plethodon) #carrega os dados
+data(plethodon) # carrega os dados
 plethodon.gpa <- gpagen(A = plethodon$land) #aplica a funcao gpagen nas coordenadas dos dados 
 
-### A funcao retorna uma lista contendo as coordenadas de Procrustes ($coord), os tamanhos dos centroides
-### ($Csize). Com a opcao ShowPlot=TRUE na funcao, obtemos um grafico onde os individuos estao em cinza ao 
-### redor da forma media em preto.
+### A funcao retorna uma lista contendo as coordenadas de Procrustes
+### ($coord), os tamanhos dos centroides ($Csize). Com a opcao
+### ShowPlot=TRUE na funcao, obtemos um grafico onde os individuos
+### estao em cinza ao redor da forma media em preto.
 
 class(plethodon.gpa) #investigue a classe a qual pertence seu objeto plethodon.gpa
 names(plethodon.gpa) #investigue o que tem dentro da sua lista
@@ -27,7 +28,8 @@ plethodon.gpa$coord ### array
 plethodon.gpa$Csize ### vetor
 
 
-### Exemplo 2: Generalized Procrustes Analysis GPA (gpagen) = USANDO PONTOS FIXOS E SEMILANDMARKS NAS CURVAS
+### Exemplo 2: Generalized Procrustes Analysis GPA (gpagen) = USANDO
+### PONTOS FIXOS E SEMILANDMARKS NAS CURVAS
 
 ### para detalhes:
 ?hummingbirds ### PEGAR ESSE ARTIGO
@@ -41,26 +43,31 @@ names (hummingbirds) # uma lista que contem land e curvepts
 hummingbirds$land ### landmarks
 
 hummingbirds$curvepts
-### matriz que mostra quais pontos sao semilandmarks (coluna do meio) e quais direcoes eles
-### deslizam (coluna 1 vs. 3) - vocês já fizeram uma matriz desse tipo na aula sobre landmarks
+### matriz que mostra quais pontos sao semilandmarks (coluna do meio)
+### e quais direcoes eles deslizam (coluna 1 vs. 3) - vocês já fizeram
+### uma matriz desse tipo na aula sobre landmarks
 
 ### Agora vamos usar a Distancia de Procrustes para deslizar
 
 ### Lembre-se de sempre visitar os argumentos da funcao
 args(gpagen)
-### ja que estamos falando de semilandmarks temos que dar uma informacao para curvas na funcao
+### ja que estamos falando de semilandmarks temos que dar uma
+### informacao para curvas na funcao
 
 beija.gpa.procD <- gpagen(A = hummingbirds$land, curves = hummingbirds$curvepts, ProcD = TRUE)
 
 ### aplica a funcao gpagen nas coordenadas dos dados, otimizando o posicionamento dos semilandmarks
-beija.gpa.procD #a funcao retorna uma lista contendo as corrdenadas de Procrustes ($coord), os tamanhos dos centroides
-#($Csize). Com a opcao ShowPlot=TRUE na funcao, obtemos um grafico onde os individuos estao em cinza ao 
-#redor  da media  da forma em preto.
+beija.gpa.procD #a funcao retorna uma lista contendo as corrdenadas de
+                #Procrustes ($coord), os tamanhos dos centroides
+                #($Csize). Com a opcao ShowPlot=TRUE na funcao,
+                #obtemos um grafico onde os individuos estao em cinza
+                #ao redor da media da forma em preto.
 
-#Vamos usar bending energy for sliding 
-#Olhem os argumentos da funcao novamente e procurem pelo ProcD
+### Vamos usar bending energy for sliding 
+### Olhem os argumentos da funcao novamente e procurem pelo ProcD
 beija.gpa.bend <- gpagen(A = hummingbirds$land, curves = hummingbirds$curvepts, ProcD=FALSE) 
-#O que mudou entre o grafico gerado por Z e W??? Como interpretamos esse resultado gr??fico?
+### O que mudou entre o grafico gerado por Z e W??? Como interpretamos
+### esse resultado gráfico?
 
 #Agora utilizaremos um exemplo com pontos fixos, curvas e superficies 
 ##Atencao Pato e Tafs precisamos ter falado sobre os conceitos disso antes do exercicio

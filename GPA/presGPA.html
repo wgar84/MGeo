@@ -495,7 +495,7 @@ W.centerscale</pre>
 <img src='thompson17.jpg' title=''/></div>
 
 <div class="centered">
-<img src='thompson.jpg' title=''/></div>
+<img src='thompson.jpg' title='fig:'/><p class='caption'>D&#39;Arcy Thompson</p></div>
 
 <div class="centered">
 <img src='DWT.jpg' title=''/></div>
@@ -505,15 +505,25 @@ W.centerscale</pre>
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="smaller">
 
 <div class="centered">
-<img src='bookstein89.jpg' title=''/></div>
+<img src='bookstein89.jpg' title='fig:'/></div>
 
 <div class="columns-2">
 <div class="centered">
-<img src='bookstein.jpg' title=''/></div>
+<img src='bookstein.jpg' title='fig:'/><p class='caption'>Fred L. Bookstein</p></div>
 
 <p><span class="cite">Bookstein (1989)</span> introduziu o formalismo físico-matemático para a estimativa de grades de deformação entre uma forma de referência e uma forma-alvo.</p>
 
-<p>Essencialmente, o modelo subjacente ao TPS descreve transformações entre duas formas atráves de um modelo usado para descrever dobramentos em uma placa metálica fina, procurando minimizar a energia necessária para produzir este dobramento.</p></div>
+<ul class = 'build'>
+<li>Modelo físico de comportamento da variação morfológica;</li>
+</ul>
+
+<ul class = 'build'>
+<li>Transformação atráves de dobramentos em uma placa metálica fina;</li>
+</ul>
+
+<ul class = 'build'>
+<li>Minimizar a energia de dobramento.</li>
+</ul></div>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
 
@@ -531,6 +541,41 @@ W.centerscale</pre>
 
 <div class="centered">
 <img src='vectorgrid.png' title=''/></div>
+
+</article></slide><slide class=''><hgroup><h2>Exemplo</h2></hgroup><article  id="exemplo">
+
+<pre class = 'prettyprint lang-r'>data(digit3.dat)
+gpa3 &lt;- gpagen(digit3.dat, ShowPlot = FALSE)
+str(gpa3)</pre>
+
+<pre >## List of 2
+##  $ coords: num [1:13, 1:2, 1:30] -0.182 -0.26 -0.334 -0.331 -0.237 ...
+##  $ Csize : num [1:30] 56.3 35.2 31.7 45.4 44.9 ...</pre>
+
+<pre class = 'prettyprint lang-r'>gpa3 $ coords &lt;- gpa3 $ coords [, 2:1, ]
+gpa3 $ coords [, 1, ] &lt;- - gpa3 $ coords [, 1, ]</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-3" class="smaller">
+
+<pre class = 'prettyprint lang-r'>par (mfrow = c (1, 2), mar = c(2, 2, 2, 2))
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = &#39;TPS&#39;)
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = &#39;vector&#39;)</pre>
+
+<img src='presGPA_files/figure-html/unnamed-chunk-18-1.png' title='fig:'/>
+
+<aside class='note'><section><p>Lembrar de falar algo sobre os parâmetros gráficos</p></section></aside>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-4" class="smaller">
+
+<pre class = 'prettyprint lang-r'>par (mfrow = c (1, 2), mar = c(2, 2, 2, 2), bty = &#39;n&#39;, xaxt = &#39;n&#39;, yaxt = &#39;n&#39;)
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
+                links = cbind (1:12, 2:13), method = &#39;TPS&#39;)
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
+                links = cbind (1:12, 2:13), method = &#39;vector&#39;)</pre>
+
+<img src='presGPA_files/figure-html/unnamed-chunk-19-1.png' title='fig:'/>
 
 <div class="references">
 </article></slide><slide class=''><hgroup><h2>Bibliografia</h2></hgroup><article  id="bibliografia" class="unnumbered smaller">

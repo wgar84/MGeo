@@ -557,7 +557,9 @@ tangente subestima a distância geodésica $\rho$.
 </div>
 
 <div class='centered'>
+
 ![D'Arcy Thompson](thompson.jpg)
+
 </div>
 
 <div class='centered'>
@@ -572,22 +574,27 @@ deformação.
 ## {.smaller}
 
 <div class='centered'>
+
 ![](bookstein89.jpg)
+
 </div>
 
 <div class='columns-2'>
 
 <div class='centered'>
-![Fred Bookstein](bookstein.jpg)
-</div>
 
+![Fred L. Bookstein](bookstein.jpg)
+
+</div>
+  
 @bookstein_principal_1989 introduziu o formalismo físico-matemático para a
 estimativa de grades de deformação entre uma forma de referência e uma forma-alvo.
 
-Essencialmente, o modelo subjacente ao TPS descreve transformações
-entre duas formas atráves de um modelo usado para descrever
-dobramentos em uma placa metálica fina, procurando minimizar a
-energia necessária para produzir este dobramento.
+> - Modelo físico de comportamento da variação morfológica;
+
+> - Transformação atráves de dobramentos em uma placa metálica fina;
+
+> - Minimizar a energia de dobramento.
 
 </div>
 
@@ -613,6 +620,42 @@ dos *landmarks* amostrados, recorrendo a um modelo físico para tal.
 <div class='centered'>
 ![](vectorgrid.png)
 </div>
+
+## Exemplo
+
+```{r, fig.height = 5, fig.width = 5}
+data(digit3.dat)
+gpa3 <- gpagen(digit3.dat, ShowPlot = FALSE)
+str(gpa3)
+gpa3 $ coords <- gpa3 $ coords [, 2:1, ]
+gpa3 $ coords [, 1, ] <- - gpa3 $ coords [, 1, ]
+```
+
+## {.smaller}
+
+```{r, fig.width = 8, fig.height = 4}
+par (mfrow = c (1, 2), mar = c(2, 2, 2, 2))
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = 'TPS')
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = 'vector')
+```
+
+<div class='notes'>
+
+Lembrar de falar algo sobre os parâmetros gráficos.
+
+</div>
+
+## {.smaller}
+
+```{r, fig.width = 8, fig.height = 4}
+par (mfrow = c (1, 2), mar = c(2, 2, 2, 2), bty = 'n', xaxt = 'n', yaxt = 'n')
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
+                links = cbind (1:12, 2:13), method = 'TPS')
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
+                links = cbind (1:12, 2:13), method = 'vector')
+```
 
 ## Bibliografia {.smaller}
 

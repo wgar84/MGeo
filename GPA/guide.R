@@ -52,3 +52,17 @@ Norm.stereo <- aaply (mil.stereo.pca $ x [, 1:2], 1, Norm)
 
 plot (Norm.stereo ~ ProcD, pch = 20, col = rainbow(10000)) ### Ortogonal
 abline(a=0, b = 1)
+
+
+data(digit3.dat)
+
+par(mar = c(2, 2, 2, 2))
+gpa3 <- gpagen(digit3.dat, ShowPlot = FALSE)
+gpa3 $ coords <- gpa3 $ coords [, 2:1, ]
+gpa3 $ coords [, 1, ] <- - gpa3 $ coords [, 1, ]
+
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = 'TPS')
+
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = 'vector')
