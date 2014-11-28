@@ -1,8 +1,4 @@
----
-title: Curso Básico de Morfometria Geométrica
-date: 7-8 de dezembro de 2014
-fontfamily: bookman
----
+# Curso Básico de Morfometria Geométrica
 
 Este curso intenciona oferecer uma introdução básica aos conceitos e
 técnicas de Morfometria Geométrica, de maneira a instrumentar o aluno
