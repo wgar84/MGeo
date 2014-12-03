@@ -32,7 +32,7 @@ plethodon.gpa$Csize ### vetor
 ### PONTOS FIXOS E SEMILANDMARKS NAS CURVAS
 
 ### para detalhes:
-?hummingbirds ### PEGAR ESSE ARTIGO
+?hummingbirds
 
 
 ### Agora vamos usar o exemplo com os beija-flores 
@@ -54,35 +54,29 @@ args(gpagen)
 ### ja que estamos falando de semilandmarks temos que dar uma
 ### informacao para curvas na funcao
 
-beija.gpa.procD <- gpagen(A = hummingbirds$land, curves = hummingbirds$curvepts, ProcD = TRUE)
+### vamos acomodar o output gráfico das duas GPAs
+### em uma janela gráfica só
+par (mfrow = c(1, 2))
 
-### aplica a funcao gpagen nas coordenadas dos dados, otimizando o posicionamento dos semilandmarks
+beija.gpa.procD <- gpagen(A = hummingbirds$land,
+                          curves = hummingbirds$curvepts, ProcD = TRUE)
+
+### aplica a funcao gpagen nas coordenadas dos dados, otimizando o
+### posicionamento dos semilandmarks
+
 beija.gpa.procD #a funcao retorna uma lista contendo as corrdenadas de
                 #Procrustes ($coord), os tamanhos dos centroides
                 #($Csize). Com a opcao ShowPlot=TRUE na funcao,
                 #obtemos um grafico onde os individuos estao em cinza
                 #ao redor da media da forma em preto.
 
-### Vamos usar bending energy for sliding 
+### Vamos usar energia de dobramento para otimizar a posição dos semilandmarks
 ### Olhem os argumentos da funcao novamente e procurem pelo ProcD
-beija.gpa.bend <- gpagen(A = hummingbirds$land, curves = hummingbirds$curvepts, ProcD=FALSE) 
-### O que mudou entre o grafico gerado por Z e W??? Como interpretamos
-### esse resultado gráfico?
 
-#Agora utilizaremos um exemplo com pontos fixos, curvas e superficies 
-##Atencao Pato e Tafs precisamos ter falado sobre os conceitos disso antes do exercicio
-#Para isso usaremos os dados sobre um molusco bivalve (Scallops)
-data(scallops)
-class(scallops) #scallops e uma lista
-names (scallops) # uma lista que contem coorddata, curvslide, surfslide, ind e land.pairs
-scallops$curvslide #matriz que mostra quais pontos sao semilandmarks (coluna do meio) e quais dire????es eles
-#deslizam (coluna 1 vs. 3)
-scallops$surfslide #matriz (1 coluna) que define quais pontos sao semilandmarks para deslizar sobre a superficie
-#Vamos usar Distancia de Procrustes para deslizar
-scallops.gpa <- gpagen (A=scallops$coorddata, curves=scallops$curvslide, surfaces=scallops$surfslide)
-# veja a definicao dos argumentos curves e surfaces no help
-#Interprete o grafico gerado em 3D
+beija.gpa.bend <- gpagen(A = hummingbirds$land,
+                         curves = hummingbirds$curvepts, ProcD=FALSE) 
 
-#Atencao! Para todas as analises subsequentes Y$coords (plethodon), Z$coords (hummingbirds), 
-#S$coords (scallops) devem ser usados
+### O que mudou entre o gráfico gerado pelas duas GPAs? Como
+### interpretamos esse resultado gráfico?
+
 

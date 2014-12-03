@@ -6,8 +6,7 @@ logo: ../Figuras/logo.jpg
 date: "18 de Novembro de 2014"
 output:
   ioslides_presentation: 
-    mathjax: local
-    self_contained: false
+    mathjax: default
     toc: true
     fig_caption: yes
 bibliography: ../cursoGM.bib
@@ -627,6 +626,9 @@ dos *landmarks* amostrados, recorrendo a um modelo físico para tal.
 data(digit3.dat)
 gpa3 <- gpagen(digit3.dat, ShowPlot = FALSE)
 str(gpa3)
+```
+
+```{r, include = FALSE}
 gpa3 $ coords <- gpa3 $ coords [, 2:1, ]
 gpa3 $ coords [, 1, ] <- - gpa3 $ coords [, 1, ]
 ```
@@ -656,6 +658,86 @@ plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
 plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
                 links = cbind (1:12, 2:13), method = 'vector')
 ```
+
+## Resumindo
+
+> - TPS possibilita a visualização de variação morfológica de uma forma
+>   mais clara;
+
+> - as deformações podem ser utilizadas como variáveis (mas aqui a gente
+>   não vai fazer isso);
+
+> - outras funções de interpolação podem ser utilizadas para modelar o
+>   comportamento dos tecidos ao redor dos *landmarks*.
+
+# Semilandmarks 
+
+## Formas sem *Landmarks* {.smaller}
+
+<div class='columns-2'>
+
+<div class='centered'>
+
+![](scapulasemi.jpg)
+
+</div>
+
+> - Em certos casos, a variação morfológica de interesse não pode ser
+>   representada exclusivamente por *landmarks*;
+
+> - Podemos recorrer à definição de *semilandmarks*, que definem uma
+>   curva homóloga em toda amostra;
+
+> - Apesar da curva ser homóloga, a posição de cada *semilandmark*
+>   sobre a curva não é homóloga na amostra.
+
+</div>
+
+<div class='notes'>
+
+Dessa forma, durante a GPA, devemos permitir que os semilandmarks
+deslizem sobre a curva.
+
+</div>
+
+## Deslizando
+
+<div class='centered'>
+
+![](tangents.jpg)
+
+</div>
+
+## Deslizando
+
+A posição dos *semilandmarks* pode ser otimizada com base em dois
+critérios:
+
+- Distância de Procrustes;
+
+- Energia Mínima de Dobramento (TPS).
+
+## Cobertura {.smaller}
+
+<div class='centered'>
+
+![](seminumber.jpg)
+
+</div>
+
+> - Aumentar a cobertura nos permite uma representação mais fidedigna
+>   da curva em questão.
+
+> - No entanto, devemos considerar que aumentar o número de variáveis
+>   implica em problemas associados ao número de graus de liberdade e
+>   tamanho amostral.
+
+<div class='notes'>
+
+- lembrando que a relação entre semilandmarks e a perda graus de
+  liberdade devido à GPA não é muito clara
+
+</div>
 
 ## Bibliografia {.smaller}
 

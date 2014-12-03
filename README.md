@@ -28,8 +28,7 @@ Dia   Horário  Quem?          Como?      O Que?
 	                          Prática    para o Curso.
 	  
       10h20    Bárbara        Teórica    Aquisição dos dados morfométricos:
-                                         Equipamentos, Landmarks, outlines e
-                	                     superfícies. Obtendo landmarks e
+                                         Equipamentos e Landmarks. Obtendo landmarks e
 										 semilandmarks (e os conceitos).
 										 Decisão: 2D ou 3D? A escolha dos marcadores
 										 e suas hipóteses. Homologia.
