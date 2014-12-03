@@ -13,64 +13,8 @@ Morfometria Geométrica.
 
 **Responsáveis**
 - Bárbara Costa (<tafinha@gmail.com>)
-<!-- - Daniela Rossoni (<daniela.rossoni@gmail.com>) -->
+- Daniela Rossoni (<daniela.rossoni@gmail.com>)
 - Guilherme Garcia (<wgar@usp.br>)
-
-## Estrutura do Curso
-
------ -------- -------------- ---------- --------------------------------------------
-Dia   Horário  Quem?          Como?      O Que?
------ -------- -------------- ---------- --------------------------------------------
-07/12 08h00    Guilherme      Teórica    Introdução: Breve Histórico da Morfometria
-                                         Geométrica.
-
-      08h30    Bárbara        Teórica/   Comandos básicos no R voltados
-	                          Prática    para o Curso.
-	  
-      10h20    Bárbara        Teórica    Aquisição dos dados morfométricos:
-                                         Equipamentos e Landmarks. Obtendo landmarks e
-										 semilandmarks (e os conceitos).
-										 Decisão: 2D ou 3D? A escolha dos marcadores
-										 e suas hipóteses. Homologia.
-										 
-	  11h00    Bárbara        Prática    Digitalizando marcadores em fotografia
-                                         utilizando o *geomorph*.
-
-	  11h50                              Proposta de apresentação final em grupo.
-
-	  14h00                              Suporte ao Usuário (para quem tiver tido
-	                                     problemas com instalação dos pacotes que
-                                         possa comprometer as próximas atividades).
------ -------- -------------- ---------- --------------------------------------------
-
------ -------- -------------- ---------- --------------------------------------------
-Dia   Horário  Quem?          Como?      Que?
------ -------- -------------- ---------- --------------------------------------------
-      14h30    Guilherme      Teórica/   Análise Generalizada de Procrustes.
-	                          Prática    Variáveis morfométricas. Tamanho do
-                                         Centróide. Translação. Rotação.
-										 Espaços da Forma. Thin Plate Splines.
-										 Resultados gráficos e interpretação.
-                                   
-08/12 08h00    Bárbara        Teórica    Análise de Componentes Principais.
-                                         Visualização das similaridades e diferenças.
-                                         Scores, autovalores e autovetores.
-
-      08h40    Bárbara        Prática    Exemplos de reconstrução da forma
-                                         sobre components principais.
-	  
-      10h20    Guilherme      Teórica/   Alometria. Regressão.
-                              Prática
-
-      14h00    Guilherme      Teórica/   Análise de Variância.
-                              Prática
-
-      16h00    Bárbara        Teórica/   Análise Discriminante.
-                              Prática
-
-      17h30                              Apresentação Final.
-
------ -------- -------------- ---------- --------------------------------------------
 
 ## Preliminares
 
