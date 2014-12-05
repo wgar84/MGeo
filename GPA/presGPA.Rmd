@@ -1,9 +1,9 @@
 ---
 title: "Generalized Procrustes Analysis"
-subtitle: Morfometria Geométrica - Aula 2
+subtitle: Morfometria Geométrica - Aula 4
 author: "Guilherme Garcia"
 logo: ../Figuras/logo.jpg
-date: "18 de Novembro de 2014"
+date: "06 de Dezembro de 2014"
 output:
   ioslides_presentation: 
     mathjax: default
@@ -19,6 +19,7 @@ require(shapes)
 require(mvnorm)
 require(geomorph)
 require(ggplot2)
+require(plyr)
 ```
 
 ## O que é a GPA? 
@@ -317,10 +318,29 @@ No caso dos triângulos $X$ e $W$, esse ângulo é um pouco menor que 20º.
 
 ---
 
+Multiplicamos a configuração $W_{cs}$ por uma matriz de rotação
+
+$$R = \begin {bmatrix}
+      cos \theta & sen \theta \\
+	- sen \theta & cos \theta \\
+	\end{bmatrix}$$
+
+```{r, include = FALSE}
+OPA <- procOPA (X.centerscale, W.centerscale)
+R <- OPA $ R
+```
+
+```{r}
+W.csr <- W.centerscale %*% R
+W.csr
+```
+
+---
+
 <div class='centered'>
 
 ```{r, fig.width = 6, fig.height = 6, echo = FALSE}
-OPA <- procOPA (X.centerscale, W.centerscale)
+
 plot (rbind (OPA $ Ahat, OPA $ Bhat),
 	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
 	xaxp = c(-0.5, 0.5, 2))
@@ -443,7 +463,7 @@ da restrição $CS(X_i) = 1$).
 >   uma forma $B$ qualquer ($\rho$);
 
 > - Diferentes projeções podem ser definidas:
-	- Ortogonal ($C$);
+	- Ortográfica ($C$);
 	- Estereográfica ($D$).
 
 <div class='notes'>
@@ -471,7 +491,7 @@ Note que, a medida que nós nos afastamos do centro, as distorções aumentam.
 
 <div class='centered'>
 
-```{r, fig.width = 6.5, fig.height = 4.5, echo = FALSE, fig.cap = 'Projeção Ortogonal'}
+```{r, fig.width = 6.5, fig.height = 4.5, echo = FALSE, fig.cap = 'Projeção Ortográfica'}
 par(mar = c(4.1, 4.1, 0.2, 2.1))
 plot(tri.pca $ x [, 1:2], col = rainbow(10000), pch = 20, cex = 0.7,
 	xlab = '', ylab = '', asp = 1, yaxp = c(-.2, .6, 4))

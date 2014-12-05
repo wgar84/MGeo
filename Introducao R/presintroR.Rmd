@@ -1,0 +1,616 @@
+---
+title: "Comandos básicos no R voltados ao curso"
+author: "Bárbara Andrade Costa"
+date: "06 e 07 de Dezembro de 2014"
+output:
+  ioslides_presentation: null
+  beamer_presentation: default
+  mathjax: default
+logo: ../Figuras/logo.jpg
+subtitle: Morfometria Geométrica
+bibliography: ../cursoGM.bib
+toc: yes
+---
+  
+# Preliminares
+
+```{r load_pack, include = FALSE}
+require(geomorph)
+require(graphics)
+```  
+  
+## O que é R? 
+  
+R é uma linguagem de programação e um ambiente de desenvolvimento integrado, para cálculos 
+estatísticos e gráficos.
+
+## Interfaces para o R 
+
+Para trabalhar mais eficientemente com o R você vai precisar de uma interface, 
+ou de um ambiente de desenvolvimento (IDE - Integrated Development Environment).
+
+São ambientes de programação que combinam ferramentas para escrever e executar seu 
+código de maneira mais fácil e eficiente.
+
+## Interface sugerida: R Studio
+
+Primeiro IDE criado especificamente para R. Seu ponto forte é a organização das janelas 
+em um arranjo fixo e de fácil acesso.
+
+Simples e intuitivo, é uma das melhores opções para começar: http://www.rstudio.org
+
+# O ambiente de trabalho
+
+---
+
+**Script, Console, Global Environment, Files/Plots/Help/Viewer**
+
+
+![](Ambiente de trabalho.jpg)
+
+
+# Use o # para comentar códigos no seu script!!
+
+## Use # e comente seus códigos no script ###
+
+<span style="color:blue;">data (plethodon)</span>  # carrega os dados
+
+<span style="color:blue;">plethodon</span>  # olhe o conteudo do objeto plethodon  
+
+<span style="color:blue;">names (plethodon)</span>  # olhe os nomes dentro do objeto plethodon
+
+<span style="color:blue;">class (plethodon)</span>  # mostra a classe a que pertence o objeto plethodon 
+
+## Como trabalhar com o R no Curso de Morfometria Geométrica? {.smaller .build}
+
+> - Vamos criar uma pasta para o Curso e armazená-la no diretório que você preferir 
+(Desktop, Meus Documentos...);
+
+> - Sempre que iniciar o R você precisa checar em qual diretório de tabalho está;
+
+> - Para isso vamos usar: getwd() e setwd().  
+
+
+## getwd() e setwd()
+
+**Qual o diretório de trabalho atual?**
+
+<span style="color:blue;">getwd()</span>
+
+[1] "/Users/dani/Copy/MGeo"
+
+**Muda o diretório de trabalho**
+
+<span style="color:blue;">setwd("/Users/dani/Copy/MGeo/Introducao R")</span>
+
+**Verificando...**
+
+<span style="color:blue;">getwd()</span>
+
+[1] "/Users/dani/Copy/MGeo/Introducao R"
+
+
+## Ou, vá na janela no canto inferior direito do RStudio... 
+
+<div class='centered'>
+![](Set as working directory.jpg)
+</div>
+
+## Qual os arquivos presentes no meu diretório ou pasta de trabalho?
+
+<span style="color:blue;">getwd()</span> # onde estou?
+
+[1] "/Users/dani/Copy/MGeo/Introducao R"
+
+<span style="color:blue;">dir()</span> # o que há dentro de Introducao R?
+
+[1] "Ambiente de trabalho small.jpg" "Ambiente de trabalho.jpg"      
+[3] "Ambiente de trabalho.png"       "Set as working directory.jpg"  
+[5] "presintroR.Rmd"                 "presintroR.html"      
+
+
+# Instalando e carregando pacotes no R
+
+# install.packages() 
+Instala pacotes
+
+## install.packages() 
+
+<span style="color:blue;">
+install.packages ("geomorph")
+</span>
+
+
+Installing package into '/Users/dani/Library/R/3.0/library'
+(as 'lib' is unspecified)
+trying URL 'http://cran.rstudio.com/bin/macosx/contrib/3.0/geomorph_2.1.1.tgz'
+Content type 'application/x-gzip' length 414710 bytes (404 Kb)
+opened URL
+==================================================
+downloaded 404 Kb
+
+## install.packages() 
+
+<span style="color:blue;">install.packages ("ggplot2")</span>  
+
+Installing package into '/Users/dani/Library/R/3.0/library'
+(as 'lib' is unspecified)
+trying URL 'http://cran.rstudio.com/bin/macosx/contrib/3.0/ggplot2_1.0.0.tgz'
+Content type 'application/x-gzip' length 2660507 bytes (2.5 Mb)
+opened URL
+==================================================
+downloaded 2.5 Mb
+
+# require() 
+Carrega pacotes
+
+## require() 
+
+<span style="color:blue;">require (geomorph)</span>
+
+Loading required package: geomorph
+
+Loading required package: rgl
+
+<span style="color:blue;">require (ggplot2)</span>
+
+Loading required package: ggplot2
+
+# Operadores <- , = 
+
+## Operadores e objetos 
+
+**objeto <- expressão**
+
+<span style="color:blue;">aves.area <- c(50, 67, 26, 22, 47, 16, 21)</span>
+
+**objeto = expressão**
+
+<span style="color:blue;">aves.area = c(50, 67, 26, 22, 47, 16, 21)</span>
+
+**objeto <- expressão**
+
+<span style="color:blue;">aves.riqueza <- c(10, 15, 6, 18, 5, 11, 20)</span>
+
+
+**objeto = expressão**
+
+<span style="color:blue;">aves.riqueza = c(10, 15, 6, 18, 5, 11, 20)</span>
+
+## Digite o nome do objeto para exibí-lo
+
+<span style="color:blue;">aves.area</span>
+
+[1] 50 67 26 22 47 16 21
+
+<span style="color:blue;">aves.riqueza</span>
+
+[1] 10 15  6 18  5 11 20
+
+---
+
+Você acabou de criar dois objetos (veja no Global Environment)
+
+![](Objeto Global Environment.jpg)
+
+
+#Linguagem orientada a objetos
+
+## Linguagem orientada a objetos
+
+<span style="color:blue;">aves.area <- c(50, 67, 26, 22, 47, 16, 21)</span>
+
+<span style="color:blue;">aves.area</span>
+
+[1] 50 67 26 22 47 16 21
+
+<span style="color:blue;">summary (aves.area)</span> # mostra resultados resumidos
+ 
+  Min.   1st Qu. Median  Mean   3rd Qu.  Max. 
+
+16.00   21.50   26.00   35.57   48.50   67.00
+
+## ls() 
+
+**Lista os objetos** 
+
+<span style="color:blue;">ls()</span>
+
+[1] "aves.area"    "aves.riqueza" "modelo1" 
+
+## Sintaxe básica das funções
+
+<span style="color:red;">função (argumento1 = valor, argumento2=valor)</span>
+
+<span style="color:blue;">?plotTangentSpace</span> # essa função do geomorph faz uma PCA
+
+<span style="color:blue;">args(plotTangentSpace)</span> # vamos olhar os argumentos da função
+
+function (A, axis1 = 1, axis2 = 2, warpgrids = TRUE, mesh = NULL, label = NULL, groups = NULL, verbose = FALSE) 
+
+# USE O HELP
+
+## 3 maneiras de chamar o help:
+
+<span style="color:blue;">help(summary)</span>
+
+<span style="color:blue;">?summary</span>
+
+Ou na janela inferior direita do RStudio digitando no help o que procura
+
+## O help fornece
+
+> - Descrição da função
+
+> - Como usar a função
+
+> - Os argumentos da função
+
+> - Detalhes
+
+> - Referências
+
+> - Exemplos
+
+# Tipos de dados no R ("Atomic data types")
+
+## Tipos de dados
+
+**1 - Numeric:** 
+
+<span style="color:blue;">
+value <- 605
+</span>
+
+<span style="color:blue;">
+value
+</span>
+
+[1] 605
+
+## Tipos de dados
+
+**2 - Character:** 
+
+<span style="color:blue;">
+string <- "Hello World"
+</span>
+
+<span style="color:blue;">
+string
+</span>
+
+[1] "Hello World"
+
+## Tipos de dados
+
+**3 - Logical:** 
+
+<span style="color:blue;">
+2 < 4
+</span>
+
+[1] TRUE
+
+## Tipos de dados
+
+**4 - Complex number:**
+
+<span style="color:blue;">
+cn <- 2+3i
+</span>
+
+<span style="color:blue;">
+cn
+</span>
+
+[1] 2+3i
+
+# Tipos de Objetos no R
+
+## Tipos de Objetos
+
+**1 - Vetor:** contém várias cópias de um mesmo tipo de objeto. Um vetor pode conter somente objetos de mesma classe.
+
+atenção para a função c() (catenate)
+
+<span style="color:blue;">meu.vetor <- c(10.5,11.3,12.4,5.7)</span>
+
+<span style="color:blue;">meu.vetor</span>
+
+[1] 10.5 11.3 12.4  5.7
+
+## Tipos de Objetos
+
+**2 - Matriz:** um array de duas dimensões com número arbitrário de linhas e colunas
+
+<span style="color:blue;">minha.matriz <- matrix(data=1:12,nrow=3,ncol=4)</span>
+
+<span style="color:blue;">minha.matriz</span>
+``` 
+     [,1] [,2] [,3] [,4]
+[1,]    1    4    7   10
+[2,]    2    5    8   11
+[3,]    3    6    9   12
+
+```
+
+## Tipos de Objetos
+
+**3 - Array:** como uma matriz, mas com dimensões arbitrárias (isto é, mais do que duas dimensões) 
+
+<span style="color:blue;">my.array <- array(1:24, dim=c(3,4,2))</span>
+
+--- 
+
+<span style="color:blue;">my.array <- array(1:24, dim=c(3,4,2))</span>
+
+<span style="color:blue;">my.array</span>
+``` 
+, , 1
+
+     [,1] [,2] [,3] [,4]
+[1,]    1    4    7   10
+[2,]    2    5    8   11
+[3,]    3    6    9   12
+
+, , 2
+
+     [,1] [,2] [,3] [,4]
+[1,]   13   16   19   22
+[2,]   14   17   20   23
+[3,]   15   18   21   24
+``` 
+
+## Tipos de Objetos
+
+**4 - Data frame:** conjunto de dados organizados, similar a uma matriz. Entretanto, cada coluna do data frame deverá conter um tipo de dado.
+
+Com a função data.frame reunimos vetores de mesmo comprimento em um só objeto.
+
+---
+
+<span style="color:blue;">nome <- c("Didi","Dede","Mussum","Zacarias")</span>
+
+<span style="color:blue;">ano.nasc <- c(1936,1936,1941,1934)</span>
+
+<span style="color:blue;">vive <- c("V","V","F","F")</span>
+
+<span style="color:blue;">trapalhoes <- data.frame(nome,ano.nasc,vive)</span>
+
+<span style="color:blue;">trapalhoes</span>
+```
+      nome ano.nasc vive
+1     Didi     1936    V
+2     Dede     1936    V
+3   Mussum     1941    F
+4 Zacarias     1934    F
+```
+
+---
+
+O mesmo, em um só comando:
+
+<span style="color:blue;">
+trapalhoes <- data.frame(nomes=c("Didi","Dedé","Mussum","Zacarias"), ano.nasc=c(1936,1936,1941,1934), vive=c("V","V","F","F"))
+</span>
+
+```
+      nome ano.nasc vive
+1     Didi     1936    V
+2     Dede     1936    V
+3   Mussum     1941    F
+4 Zacarias     1934    F
+```
+
+## Tipos de Objetos
+
+**5 - Function:** conjunto de comandos com entrada (input) e saída (output) definidos.
+
+## Tipos de Objetos
+
+**6 - Lista:** coleção arbitrária de outros objetos de R (os quais podem incluir outras listas). Pode conter objetos de diferentes classes.
+
+<span style="color:blue;">
+data(plethodon) # carrega os dados 
+</span>
+
+<span style="color:blue;">
+plethodon
+</span>
+
+São dados do pacote *geomorph* referentes à salamandra do gênero *Plethodon*. 
+
+---
+
+```
+$land
+, , 1
+[,1] [,2]
+[1,] 8.89372 53.77644
+[2,] 9.26840 52.77072
+[3,] 5.56104 54.21028
+[4,] 1.87340 52.75100
+...
+$links
+[,1] [,2]
+[1,] 4 5
+[2,] 3 5
+[3,] 2 4
+[4,] 1 2
+[5,] 1 3
+[6,] 6 7
+...
+
+```
+--- 
+
+```
+$species
+[1] Jord Jord Jord Jord Jord Jord Jord Jord Jord Jord Teyah Teyah Teyah Teyah Teyah Teyah Teyah
+[18] Teyah Teyah Teyah Jord Jord Jord Jord Jord Jord Jord Jord Jord Jord Teyah Teyah Teyah Teyah
+[35] Teyah Teyah Teyah Teyah Teyah Teyah
+Levels: Jord Teyah
+
+$site
+[1] Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp Symp
+Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo Allo
+Levels: Allo Symp
+```
+---
+
+### A base de dados **plethodon é uma lista** que contém quatro componentes:
+
+
+* as coordenadas dos dados - landmarks  <span style="color:blue;">(plethodon$land)</span>;
+
+* the wirelink addresses for plotting <span style="color:blue;">(plethodon$links)</span>; 
+
+* dois conjuntos de variáveis como fatores <span style="color:blue;">species e sites</span> 
+
+
+---
+
+### Classe a que pertencem os componentes da lista
+
+<span style="color:blue;">
+class(plethodon$site)
+</span>
+
+[1] "factor"
+
+<span style="color:blue;">
+class(plethodon$land)
+</span>
+
+[1] "array"
+
+<span style="color:blue;">
+class(plethodon$links)
+</span>
+
+[1] "matrix"
+
+---
+
+**Investigue o conteúdo do objeto plethodon**
+
+<span style="color:blue;">
+names(plethodon) # olhe os nomes dentro do objeto plethodon
+</span>
+
+[1] "land"    "links"   "species" "site"   
+
+<span style="color:blue;">
+class(plethodon) # mostra a classe a que pertence o objeto 
+</span>
+
+[1] "list"
+
+---
+
+**Investigue a estrutura do objeto plethodon**
+
+<span style="color:blue;">
+str(plethodon)
+</span>
+
+```
+List of 4
+ $ land   : num [1:12, 1:2, 1:40] 8.89 9.27 5.56 1.87 1.28 ...
+  ..- attr(*, "dimnames")=List of 3
+  .. ..$ : NULL
+  .. ..$ : NULL
+  .. ..$ : NULL
+ $ links  : num [1:14, 1:2] 4 3 2 1 1 6 7 8 9 10 ...
+ $ species: Factor w/ 2 levels "Jord","Teyah": 1 1 1 1 1 1 1 1 1 1 ...
+ $ site   : Factor w/ 2 levels "Allo","Symp": 2 2 2 2 2 2 2 2 2 2 ..
+``` 
+
+# Funções básicas no R que ajudam a entender o formato dos dados
+
+## Funções básicas no R
+
+class() # a classe do objeto
+
+attributes() # atributo do objeto (lista)
+
+dim() # dimensões do objeto
+
+nrow() ; ncol() # número de linhas/colunas de uma matriz
+
+dimnames() # nome da dimensão do objeto 
+
+names() # o nome de um objeto
+
+rownames() ; colnames() # nome de linhas e colunas
+
+is.numeric() # é muito útil saber se os dados são numéricos ou não - dataframes geralmente não mantém os dados como numéricos, mesmo que sejam números.
+
+
+# O que é mais importante sabermos para o Curso?
+
+## *Geomorph*
+
+> - Armazena dados principalmente em 2D array ou 3D array (**matriz e array**, respectivamente);
+
+> - As variáveis agrupadoras são **vetores** e **fatores**;
+
+> - Os outputs das funções podem ser uma **lista**
+
+
+## Landmarks no geomorph
+### Dois tipos de objetos: 
+
+**Matriz** (figura A) e **Array** (figura B)
+
+![](matriz e array.jpg)
+
+# Recordando matriz e array
+
+## Array 
+
+```{r}
+my.array <- array(1:24, dim=c(3,4,2))
+my.array
+```
+
+## Matriz
+
+```{r}
+minha.matriz <- matrix(data=1:12,nrow=3,ncol=4)
+minha.matriz
+
+```
+
+# Recordando lista
+
+## Lista
+
+```{r}
+pts <- list(x = cars[,1], y = cars[,2])
+pts
+```
+
+# Processo de análise morfométrica no *geomorph*  
+
+## {.smaller .build} 
+
+**Azul:** passos realizados no R e *geomorph*.
+
+**Alaranjado:** passos realizados fora do R e importados para o R. 
+
+<div class='centered'>
+![](geomorph.jpg)
+</div>
+
+
+## {.smaller .build} 
+
+Algumas questões ou análises e funções no *geomorph*
+
+<div class='centered'>
+![](analises geomorph.jpg)
+</div>
+
+# Vamos treinar no R!!

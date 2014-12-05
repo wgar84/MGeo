@@ -1,0 +1,294 @@
+---
+title: Análise de Variância
+subtitle: Morfometria Geométrica - Aula 6
+author: "Guilherme Garcia"
+logo: ../Figuras/logo.jpg
+date: "07 de Dezembro de 2014"
+output:
+  ioslides_presentation: 
+    mathjax: default
+    toc: true
+    fig_caption: yes
+bibliography: ../cursoGM.bib
+---
+
+# Preliminares
+
+## Por que fazer ANOVA?
+
+> - Porque queremos investigar o efeito de uma *variável categórica* preditora
+>   sobre a variação de uma *variável contínua* resposta;
+
+> - **Variável Categórica**: Associa categorias discretas e
+>   não-ordenáveis a uma amostra, definindo grupos nesta amostra;
+
+> - Exemplos: Sexo, Localidade, Espécie.
+
+## Por que fazer ANOVA?
+
+> - Em particular, queremos testar se os diferentes grupos definidos
+>   pela variável categórica possuem médias diferentes na variável
+>   resposta.
+
+> - No caso mais simples, testamos o efeito de uma variável categórica
+>   binária. Outros casos (mais de dois grupos, mais de uma variável
+>   categórica ou resposta, efeitos de interação) também podem ser
+>   investigados através da ANOVA.
+
+# Como fazer?
+
+##
+
+Em primeiro lugar, vamos ilustrar o caso mais simples:
+
+* Uma variável resposta;
+
+* Uma variável categórica preditora.
+
+Usamos aqui um exemplo baseado em @adams_parallel_2010.
+
+## Tamanho do Centróide em *Plethodon*
+
+```{r, fig.width = 7, fig.height = 4.5}
+data(plethodon)
+plethodon.gpa <- gpagen(plethodon$land)
+```
+
+## {.smaller}
+
+```{r, fig.width = 4.5, fig.height = 4.5}
+plet.cs.df <- data.frame (plethodon$species, plethodon$site, plethodon.gpa$Csize)
+colnames (plet.cs.df) <- c('sp', 'site', 'cs')
+plot (cs ~ sp, data = plet.cs.df, subset = (site == 'Symp'))
+```
+
+## Hipóteses
+
+* $H_0$: todas as observações são realizações de uma única distribuição normal;
+
+* $H_1$: as observações são realizações de duas distribuições normais,
+  com variâncias idênticas e médias diferentes (de acordo com os grupos);
+
+## Partição de Somas de Quadrados {.build}
+
+Podemos separar a somas de quadrados total entre aquela proveniente do
+efeito de agrupamento com aquela residual:
+
+$$ \Sigma_{total} = \Sigma_{efeito} + \Sigma_{residual} $$
+
+$$ \sum_i^n (y_i - \bar{y})^2 = \sum_j^m (\bar{y}_j - \bar{y})^2 +
+	\sum_j^m \sum_k^{n_j} (y_k - \bar{y}_j)^2 $$
+
+para $m$ grupos, cada qual com $n_j$ observações.
+
+## 
+
+<div class='centered'>
+
+```{r, fig.width = 7, fig.height = 4.5, echo = FALSE}
+par(mar = c(4.1, 4.1, 0.5, 2.1))
+plet.symp.cs <- subset (plet.cs.df, site == 'Symp')
+plot(plet.symp.cs $ cs, pch = 20,
+     col = ifelse (plet.symp.cs $ sp == 'Jord', 'red', 'darkgreen'),
+     xlab = 'Indivíduo', ylab = 'Tamanho do Centróide')
+arrows(x0 = 1, x1 = 20, lwd = 4, col = rgb(0, 0, 0, 0.2), length = 0,
+       y0 = mean (plet.symp.cs $ cs),
+       y1 = mean (plet.symp.cs $ cs))
+for (i in 1:20)
+  arrows(x0 = i, x1 = i, length = 0, col = rgb(0, 0, 0, 0.2), lwd = 1,
+         y0 = plet.symp.cs $ cs [i],
+         y1 = mean (plet.symp.cs $ cs))
+```
+
+</div>
+
+$$ \Sigma_{total} = \sum_i^n (y_i - \bar{y})^2 $$
+
+##
+
+<div class='centered'>
+
+```{r, fig.width = 7, fig.height = 4.5, echo = FALSE}
+par(mar = c(4.1, 4.1, 0.5, 2.1))
+plot(plet.symp.cs $ cs, pch = 20,
+     col = ifelse (plet.symp.cs $ sp == 'Jord', 'red', 'darkgreen'),
+     xlab = 'Indivíduo', ylab = 'Tamanho do Centróide')
+points(x = 5.5, y = mean (plet.symp.cs $ cs [1:10]), pch = 20, cex = 3, col = 'red')
+points(x = 15.5, y = mean (plet.symp.cs $ cs [11:20]),
+pch = 20, cex = 3, col = 'darkgreen')
+arrows(x0 = 1, x1 = 20, lwd = 4, col = rgb(0, 0, 0, 0.2), length = 0,
+       y0 = mean (plet.symp.cs $ cs),
+       y1 = mean (plet.symp.cs $ cs))
+arrows(x0 = 5.5, x1 = 5.5, code = 3, length = 0, col = 'red',  lwd = 3,
+       y0 = mean (plet.symp.cs $ cs),
+       y1 = mean (plet.symp.cs $ cs [1:10]))
+arrows(x0 = 15.5, x1 = 15.5, code = 3, length = 0, col = 'darkgreen',  lwd = 3,
+       y0 = mean (plet.symp.cs $ cs),
+       y1 = mean (plet.symp.cs $ cs [11:20]))
+```
+
+</div>
+
+$$ \Sigma_{efeito} = \sum_j^m (\bar{y}_j - \bar{y})^2 $$
+
+##
+
+<div class='centered'>
+
+```{r, fig.width = 7, fig.height = 4.5, echo = FALSE}
+par(mar = c(4.1, 4.1, 0.5, 2.1))
+plot(plet.symp.cs $ cs, pch = 20,
+     col = ifelse (plet.symp.cs $ sp == 'Jord', 'red', 'darkgreen'),
+     xlab = 'Indivíduo', ylab = 'Tamanho do Centróide')
+arrows(x0 = 1, x1 = 10, code = 3, length = 0, col = 'red',  lwd = 3,
+       y0 = mean (plet.symp.cs $ cs [1:10]),
+       y1 = mean (plet.symp.cs $ cs [1:10]))
+arrows(x0 = 11, x1 = 20, code = 3, length = 0, col = 'darkgreen',  lwd = 3,
+       y0 = mean (plet.symp.cs $ cs [11:20]),
+       y1 = mean (plet.symp.cs $ cs [11:20]))
+for (i in 1:10)
+  arrows(x0 = i, x1 = i, length = 0, col = 'red',  lwd = 1,
+       y0 = mean (plet.symp.cs $ cs [1:10]),
+         y1 = mean (plet.symp.cs $ cs [i]))
+for (i in 1:10)
+  arrows(x0 = i+10, x1 = i+10, length = 0, col = 'darkgreen', lwd = 1,
+       y0 = mean (plet.symp.cs $ cs [11:20]),
+         y1 = mean (plet.symp.cs $ cs [i+10]))
+```
+
+$$ \Sigma_{residual} = \sum_j^m \sum_k^{n_j} (y_k - \bar{y}_j)^2 $$
+
+</div>
+
+## Teste F {.build}
+
+Queremos que a variância explicada pelos grupos seja maior que a variância residual.
+
+$$ MSQ_{efeito} = \frac{\Sigma_{efeito}}{\nu_{efeito}} \qquad
+   MSQ_{residual} = \frac{\Sigma_{residual}}{\nu_{residual}} $$
+
+$$ F_{efeito} = \frac{MSQ_{efeito}}{MSQ_{residual}} $$
+
+Esse valor $F_{efeito}$ é comparado a uma distribuição $F$ com parâmetros
+$\nu_{efeito}$ e $\nu_{residual}$.
+
+## R
+
+No R, chamamos a função *lm*:
+
+```{r}
+plet.cs.model.sp <- lm(cs ~ sp, data = plet.cs.df,
+                       subset = (site == 'Symp'))
+plet.cs.model.sp
+```
+
+## {.smaller}
+
+Se chamarmos a função *summary* sobre o objeto do modelo, obtemos o
+resultado de um teste $t$ para a diferença na média dos dois grupos:
+
+```{r}
+summary(plet.cs.model.sp)
+```
+
+## R
+
+E, para verificar especificamente o resultado da ANOVA:
+
+```{r}
+anova(plet.cs.model.sp)
+```
+
+Neste caso, se definimos $\alpha = 0.05$, não somos capazes de rejeitar $H_0$.
+
+## Complicando... {.smaller}
+
+Podemos começar a complicar com mais de um efeito. No caso do nosso
+exemplo, podemos testar o efeito de espécie e co-ocorrência conjuntamente:
+
+```{r, fig.width = 8, fig.height = 3.5}
+par (mfrow = c(1, 2), mar = c(4.1, 5.1, 0.5, 2.1))
+plot (cs ~ sp, data = plet.cs.df)
+plot (cs ~ site, data = plet.cs.df)
+```
+
+## Complicando...
+
+O modelo de partição de somas ganha um termo:
+
+$$ \Sigma_{T} = \Sigma_{sp} + \Sigma_{loc} + \Sigma_{res} $$
+
+```{r}
+plet.cs.model.ss <- lm (cs ~ sp + site, data = plet.cs.df)
+anova(plet.cs.model.ss)
+```
+
+## Interações
+
+Podemos também testar o efeito de interação entre as duas variáveis:
+
+```{r, fig.width = 8, fig.height = 3.5}
+par (mar = c(4.1, 5.1, 0.5, 2.1))
+plot (cs ~ interaction (sp, site), data = plet.cs.df)
+```
+
+## Interações
+
+O modelo de partição de somas ganha mais um termo:
+
+$$ \Sigma_{T} = \Sigma_{sp} + \Sigma_{loc} + \Sigma_{inter} + \Sigma_{res} $$
+
+```{r}
+plet.cs.model.i <- lm (cs ~ sp * site, data = plet.cs.df)
+anova(plet.cs.model.i)
+```
+
+## Até Agora
+
+> - Vimos como testar o efeito de variáveis categóricas sobre uma
+>   variável resposta;
+
+> - Podemos testar o efeito de duas variáveis, bem como o efeito de
+>   interação entre elas;
+
+> - Mas como fazemos com a variação de forma?
+
+# Forma
+
+- ANOVA de Procrustes
+
+- MANOVA
+
+## ANOVA de Procrustes {.build}
+
+A ANOVA de Procrustes [@goodall_procrustes_1991] é um método para
+testarmos o efeito de fatores sobre a variação de forma que usa o
+particionamento da distância de Procrustes no lugar das somas de
+quadrados que vimos anteriormente.
+
+$$ \rho_{total} = \rho_{efeito} + \rho_{residual} $$
+
+##
+
+```{r}
+plethodon.shape <- two.d.array(plethodon.gpa $ coords)
+plet.shape.sp <- procD.lm(plethodon.shape ~ plethodon $ species)
+plet.shape.sp
+```
+
+## ANOVA de Procrustes
+
+> - O nível de significância do teste é avaliado atráves de
+>   um procedimento de aleatorização (não-paramétrico);
+
+> - Não é possível avaliar o tamanho dos efeitos.
+
+## MANOVA
+
+Generalização da ANOVA para múltiplas variáveis resposta. No caso, o
+particionamento de somas de quadrados se torna o particionamento de
+somas de quadrados e produtos cruzados (SSCPs).
+
+$$ SSCP_{total} = SSCP_{efeito} + SSCP_{residual} $$
+
+## Bibliografia
