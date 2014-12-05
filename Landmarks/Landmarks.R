@@ -53,8 +53,4 @@ slm <- define.sliders.2d (exercicio [, , 1], 31)
 
 slm # verifique o objeto criado.
 
-# exemplo em beija-flors
-
 GPA <- gpagen(exercicio.semi, ShowPlot = TRUE, curves = slm)
-
-### LER TRAMPOS DE AVES
