@@ -291,4 +291,9 @@ somas de quadrados e produtos cruzados (SSCPs).
 
 $$ SSCP_{total} = SSCP_{efeito} + SSCP_{residual} $$
 
+De modo geral, o teste segue inalterado. As hipóteses se baseam na
+distribuição multinormal, e o nível de significância do teste é
+avaliado através de outra distribuição ($\Lambda$ de Wilks, Pillai),
+baseado em uma estatística similar à razão entre $\Sigma_e$ e $\Sigma_r$.
+
 ## Bibliografia

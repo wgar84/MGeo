@@ -1,0 +1,219 @@
+---
+title: "Principal Component Analysis (PCA)"
+subtitle: Morfometria Geométrica - Aula x
+author: "Daniela M. Rossoni"
+logo: ../Figuras/logo.jpg
+date: "20 de Novembro de 2014"
+output:
+  ioslides_presentation: 
+  mathjax: default
+toc: yes
+bibliography: ../cursoGM.bib
+---
+  
+# Preliminares
+  
+```{r load_pack, include = FALSE}
+require(shapes)
+require(geomorph)
+```
+<div class='notes'>
+Estes são os pacotes que nós vamos usar em aula prática.
+Até o momento nós aboradamos as seguintes etapas no curso:
+Coletamos os landmarks;
+Fizemos GPA;
+E agora nós estamos interessados em analisar as similaridades e as diferenças na forma. 
+E isso motiva a nossa aula de hoje sobre Análise de Componentes Principais.
+</div>
+
+## O que é a PCA? 
+
+A PCA ('Principal Component Analysis') é uma ferramenta de análise exploratória dos dados, 
+usada para simplificar as decrições de variação entre indivíduos. Ordena os objetos na sua 
+análise, organizando-os em um espaço de forma.
+
+<div class='notes'> 
+A PCA produz novos conjuntos de variáveis que são combinações lineares das variáveis originais.
+Produz também scores para os individuos nessas variáveis, que podem ser plotados e utilizados 
+visualmente para inspecionar padrões. O método pode ser chamado de método de ordenação porque 
+os scores ordenam os individuos ao longo de novas variaveis.
+</div>
+ 
+## Qual a proposta da PCA?   
+  
+> - Simplificar padrões
+
+> - Substitui a variável original por novas variáveis (PCs)
+
+> - Combinações lineares das variáveis originais
+
+> - Independentes (não correlacionadas)
+
+<div class='notes'>
+É esperado que variáveis morfométricas (tanto geométricas quanto tradicionais) sejam correlacionadas 
+pois elas descrevem características do organismo que são relacionadas do ponto de vista genético, 
+funcional ou de desenvolvimento. Isso dificulta a interpretação dos padrões de variação e de covariação
+desses caracteres. A proposta da PCA é simplificar esses padrões e torná-los mais simples de interpretar, 
+substituindo a variável original por novas variáveis (components principais, PCs) que são combinações 
+lineares das variáveis originais e independents umas das outras (ou seja, variáveis não correlacionadas).
+</div>
+  
+## Vantagens da PCA?
+
+> - Permite identificar padrões (abordagem de questões biológicas);
+
+> - A maior parte da variação na amostra geralmente pode ser descrita com poucos PCs;  
+
+> - Simplifica e deixa claro o que deve ser explicado; 
+
+> - Apresentação dos resultados é simplificada;
+
+> - Visualização gráfica das similaridades e diferenças;
+
+> - Fornece novas variáveis para análises estatísticas futuras;
+
+	
+# IMPORTANTE!!
+
+> - PCA NÃO deve ser usada como um teste de hipótese
+
+> - As diferenças visualizadas em gráfico de PCA não demonstram
+evidência de entidades distintas estatisticamente.
+
+<div class='notes'>
+
+O PCA vai dar uma idéia sobre os seus dados. Vai simplificar a sua base de dados e te ajudar 
+a identificar possíveis padrões. Porém, outros métodos estatísticos deverão ser utilizados para 
+testar hipóteses se aqueles grupos a priori são significativamente diferentes.
+
+</div>
+
+## Similaridades e diferenças podem ser vistas em um gráfico de PCA. {.flexbox .vcenter .hcenter .build}
+
+<div class='columns-2'>
+
+![](osteostracan PCs small.jpg)
+
+> - Os eixos são os PCs
+> - Cada ponto representa a forma de um único objeto da sua análise
+> - Quanto mais próximos esses objetos são, mais similares eles serão em suas formas
+
+</div>
+
+<div class='notes'>
+
+Então nós falamos que a PCA ordena os objetos da nossa análise,
+organizando-os em um espaço de forma.  O primeiro PC da análise é, por
+definição, o eixo de maior variação na forma. O segundo componente
+principal é o segundo eixo de maior variação e assim por diante.
+
+</div>
+
+---
+
+![](osteostracan PCs.jpg)
+![](osteostraci drawn.jpg)
+<div class='notes'>
+Aqui no caso nós temos um exemplo de 11 espécies (cada ponto representa uma espécie) de ostracodermes. 
+Um grupo de agnatos (peixes sem maxilas) extintos. Compreendem diversas linhagens distintas, entretanto, 
+todos são caracterizados pela presença de um revestimento de ossos dérmicos, geralmente na forma de uma extensa 
+armadura ou carapaça, mas às vezes na forma de placas menores ou escamas. 
+</div>
+
+## Como a forma varia em um gráfico de PCA? {.flexbox .vcenter .hcenter}
+
+  ![](osteostracan morphospace.jpg)
+
+<div class='notes'>
+Aqui nós temos os landmarks medidos dos crânios desses peixes e um gráfico de PCA. O TPS (thin-plate spline grids,
+que o Pato já mencionou na aula anterior) nesse gráfico de PCA nos mostra como a forma varia ao longo do primeiro e 
+segundo components principais considerando um conjunto de dados de escudos ou ossos dérmicos nas cabeças desses peixes 
+(mostrado a direita). Um gráfico de PCA é chamado também de morfoespaço porque cada ponto no gráfico representa uma 
+forma diferente, ou mais especificamente, uma configuração diferente de landmarks. Uma parte importante de entender os 
+resultados de PCA é explorarar como a forma varia em um gráfico de PCA. Por exemplo, à esquerada do gráfico o landmark 
+1 está localizado na frente e mais distante dos landmarks 8 e 11. Na direita o landmark 1 está bem próximos dos landmarks 8 e 11. 
+</div>
+
+![](PCs e morphospace TPS.jpg)
+<div class='notes'>
+As espécies localizadas à esquerda do gráfico no slide anterior tem formas como os grids a esquerda desse plot. Explorar 
+o morfoespaço com esses grids pode nos ajudar a compreender o significado de uma PCA. E é isso que nós vamos fazer na 
+aula prática de hoje.
+</div>  
+
+![](osteostracan PCA plot e TPS.jpg)
+<div class='notes'>
+Você pode também investigar a distrbuição da forma voltando lá atrás prás suas fotografias originais .
+E comparando essas formas aos grids do slide anterior. 
+</div>    
+
+## Os PCs de um conjunto de dados são seus eixos de maior variação
+
+
+
+![](PC scatter.jpg)
+<div class='notes'>
+Aqui nós temos dois caracteres x1 e x2, que podem ser medidas de distâncias. Cada ponto no gráfico 
+representa os valores observados para cada espécie. Nesse caso, o caráter x1 tem um alcance maior 
+de valores observados e uma variância maior, quando comparado com x2. Outra coisa, os valores de
+x1 e x2 não são independentes. Eles sao correlacionados. Maiores valores de x1 estão associados 
+a maiores valores de x2.
+</div>
+
+---
+
+![](scatter e elipse.jpg)  
+<div class='notes'>
+Essa é uma outra forma de representar esse mesmo gráfico. É importante ressaltar que aqui estamos
+falando de duas variáveis x1 e x2, mas geralmente nossa base de dados é bem mais complexa do que 
+isso. No meu caso, por exemplo, eu tenho 35 distâncias cranianas…
+</div>
+
+## Quais são os passos de uma PCA?
+  
+> - Encontrar a direção (ou eixo) que descreve a maior proporção de variância total no seu
+conjunto de dados  
+
+> - Rotacionar os dados para o eixo de maior variação
+
+> - Preserva as distâncias originais entre os dados
+
+> - Remove as correlações entre as variáveis
+
+<div class='notes'>
+Os scores dos PCs agora são variáveis de forma que serao usadas em análises subsequentes.
+</div>
+
+![](PCA steps.jpg)  
+<div class='notes'>
+Neste exemplo temos uma elipse em 3D, com os eixos (comprimento, largura e altura). 
+Isso pode ser descrito como uma função contendo 3 variáveis. Com os passos da PCA
+nós temos no final um novo sistema de coordenadas, onde cada ponto daquela elipse pôde 
+ser reescrito em função de duas variáveis. Reduz o numero de variáveis sem perder informação.
+</div>  
+  
+## A PCA também fornece
+
+> - Scores - coordenadas de cada ponto em cada eixo dos PCs (podem ser usadas como variáveis de 
+forma em outras análises);
+
+> - Autovalores (eigenvalues) - variância em cada eixo dos PCs;
+
+> - Autovetores (eigenvectors) - loading de cada variável original em cada eixo dos PCs
+
+## Geomorph {.flexbox .vcenter .hcenter}
+
+![](geomorph steps PCA.jpg)
+
+## plotTangentSpace
+
+Retorna:
+pc.summary:  A PC summary table (standard deviation, proportion of variance, cumulative proportion) 
+pc.scores:	The set of principal component scores for all specimens.
+pc.shapes:	A list with four components of the shape coordinates of the extreme ends of axis1 and axis2
+is returned, which can be used by warpRefMesh.
+
+
+
+  
+  

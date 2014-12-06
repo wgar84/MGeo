@@ -1,0 +1,23 @@
+---
+title: Breve Histórico da Morfometria Geométrica
+subtitle: Morfometria Geométrica - Aula Zero
+author: "Guilherme Garcia"
+logo: ../Figuras/logo.jpg
+date: "06 de Dezembro de 2014"
+output:
+  ioslides_presentation: 
+    mathjax: default
+    toc: true
+    fig_caption: yes
+bibliography: ../cursoGM.bib
+---
+
+## Antes de 1985
+
+- Certos problemas dos quais a morfometria geométrica depende já
+  haviam sido resolvidos do ponto de vista matemático antes de se
+  iniciar a 'Revolução'
+
+## Fred Bookstein
+
+
