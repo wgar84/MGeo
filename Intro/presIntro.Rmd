@@ -12,12 +12,70 @@ output:
 bibliography: ../cursoGM.bib
 ---
 
-## Antes de 1985
+## Morfometria Geométrica
+
+Consiste em representar estruturas morfológicas como configurações de
+marcos anatômicos, ao invés de, por exemplo, representar estas
+estruturas utilizando distâncias entre estes marcos.
+
+## Antes de 1984
 
 - Certos problemas dos quais a morfometria geométrica depende já
   haviam sido resolvidos do ponto de vista matemático antes de se
   iniciar a 'Revolução'
 
-## Fred Bookstein
+- Por exemplo, Schönemann (1966) apresentava uma solução
+  para o problema de encontrar o(s) ângulo(s) ótimo(s) de rotação
+  entre duas configurações de pontos.
 
+##
 
+<div class='centered'>
+
+![David G. Kendall](kendall.jpg)
+
+</div>
+
+Kendall definiu grande parte dos conceitos matemáticos em teoria da
+forma, de maneira ainda bastante geral e abstrata.
+
+##
+
+<div class='centered'>
+
+![Fred L. Bookstein](bookstein.jpg)
+
+</div>
+
+Bookstein trabalhou nas bases matemáticas da morfometria geométrica em
+seus trabalhos do final da década de 1980 e do início da década de
+1990.
+
+##
+
+<div class='centered'>
+
+![F. James Rohlf](rohlf.jpg)
+
+</div>
+
+Rohlf tem muitas contribuições teóricas importantes, mas talvez sua
+maior contribuição seja em relação à popularização da morfometria
+geométrica devido aos programas da série *tps*.
+
+##
+
+<div class='centered'>
+
+![Miriam L. Zelditch](zelditch.jpg)
+
+<div class='columns-2'>
+
+Seu texto introdutório *Geometric Morphometrics for Biologists* ainda
+é a melhor introdução ao tema para nós.
+
+![](livroverde.jpg)
+
+</div>
+
+</div>

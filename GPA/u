@@ -1,0 +1,663 @@
+---
+title: "Generalized Procrustes Analysis"
+author: "Guilherme Garcia"
+date: "18 de Novembro de 2014"
+output:
+  ioslides_presentation:
+    fig_caption: yes
+    mathjax: default
+    self_contained: no
+    toc: yes
+  beamer_presentation: default
+logo: ../Figuras/logo.jpg
+subtitle: Morfometria Geométrica - Aula 2
+bibliography: ../cursoGM.bib
+---
+
+# Preliminares
+
+```{r load_pack, include = FALSE}
+require(shapes)
+require(mvnorm)
+require(geomorph)
+require(ggplot2)
+require(plyr)
+```
+
+## O que ?? a GPA? 
+
+A GPA ('Generalized Procrustes Analysis') consiste em realizar uma s??rie de
+opera????es sobre um conjunto de configura????es de marcos, de maneira a remover deste
+conjunto aquela varia????o que n??o ?? informativa do ponto de vista biol??gico:
+
+> - Transla????o;
+
+> - Rota????o;
+
+> - Escala.
+
+## Mas... {.build}
+
+Varia????o em escala ?? importante do ponto de vista biol??gico.
+
+A GPA nos permite separar a varia????o associada ?? escala daquela
+associada ?? forma, de modo que ?? poss??vel estimar efeitos alom??tricos
+sobre a varia????o de forma.
+
+**Alometria**: associa????o entre um car??ter de interesse (morfol??gico, fisiol??gico,
+ou at?? mesmo ecol??gico) e tamanho corporal [@huxley_problems_1932].
+
+<div class='notes'>
+
+escala log-log
+
+</div>
+
+# Passo a Passo
+
+* $k$: n??mero de marcos anat??micos
+* $m$: dimens??es
+* $n$: n??mero de indiv??duos
+
+@zelditch_geometric_2004
+
+## Centr??ide {.flexbox .vcenter .hcenter}
+
+![](centroid.jpg)
+
+$$C_j = \frac{1}{k}\sum_{i=1}^{k}X_{ij}$$
+
+<div class='notes'>
+M??dia aritm??tica simples entre os valores em cada marco,
+para cada uma das $m$ dimens??es.
+</div>
+
+----
+
+```{r}
+X <- matrix(c(-1, -1, 1, -1, 0, 1), nrow = 3, byrow = T)
+X
+colMeans(X)
+```
+
+## Tamanho do Centr??ide {.flexbox .vcenter .hcenter}
+
+![](centroidsize.jpg)
+
+$$CS(X) = \sqrt{\sum_{i=1}^{k}\sum_{j=1}^{m}(X_{ij} - C_j)^2}$$
+
+<div class='notes'>
+CS (X) = $\sqrt{L1^2 + L2^2 + L3^2}$
+</div>
+
+----
+
+```{r}
+centroid.size(X)
+```
+
+Assim, o tamanho do centr??ide ?? a vari??vel
+que representa a varia????o de escala.
+
+@bookstein_morphometric_1991 demonstrou que o $CS$ ?? uma vari??vel
+"pura" de tamanho.
+
+<div class='notes'>
+
+Isso significa que, dada uma popula????o de configura????es desprovida de
+rela????es alom??tricas, o CS necessariamente ir?? possuir correla????es
+nulas com as vari??veis de forma. Outras medidas que podem ser
+entendidas como tamanho, como por exemplo o comprimento total do
+cr??nio, podem ter correla????es com as vari??veis de forma, de modo que
+esse tipo de medida ?? na verdade uma combina????o entre escala e forma. 
+
+</div>
+
+----
+
+Para remover o efeito do tamanho das coordenadas cartesianas,
+podemos simplesmente dividir cada coordenada de cada *landmark*
+de uma configura????o pelo tamanho do centr??ide.
+
+```{r}
+### <b>
+X.norm <- X / centroid.size(X)
+### </b>
+X.norm
+centroid.size(X.norm)
+```
+
+## Exemplo M??nimo {.smaller .build}
+
+Vamos seguir os passos referentes ?? GPA no exemplo m??nimo de dois
+tri??ngulos. Neste caso, o procedimento ?? chamado de
+"Ordinary Procrustes Analysis".
+
+$$
+X = \begin{bmatrix}
+	-1 & -1 \\
+	1 & -1 \\
+	0 & 1 \\
+	\end{bmatrix}
+\qquad	
+W = \begin {bmatrix}
+	1.07 & -1.64 \\
+	3.10 & -0.72 \\
+	1.55 & 0.82 \\
+	\end{bmatrix}
+$$
+	
+<div class='centered'>
+![](twotri.jpg)
+</div>
+
+<div class='notes'>
+
+Caso voc?? precise executar esse procedimento no R, existe uma fun????o
+chamada *procOPA* no pacote *shapes*.
+
+</div>
+
+## Transla????o {.smaller .build}
+
+Esta opera????o lida com aquela varia????o proveniente do
+posicionamento.
+
+```{r}
+X
+W <- matrix (c(1.07, -1.64, 3.1, -0.72, 1.55, 0.82),  nrow = 3, byrow = TRUE)
+W
+```
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X, W), asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-2, 1, 3))
+points(rbind (X, X[1, ]), type = 'b', pch = 19)
+points(rbind (W, W [1, ]), type = 'b', pch = 15)
+text (0, -1/3, labels = 'X')
+text (colMeans (W), labels = 'W')
+```
+
+</div>
+
+---
+
+A opera????o ?? relativamente simples: n??s apenas subtra??mos a posi????o do
+centr??ide de cada configura????o de suas coordenadas, efetivamente
+deslocando o centr??ide de todas as configura????es para o par $(0, 0)$.
+
+<div class='centered'>
+```{r, fig.width = 4, fig.height = 4, echo = FALSE}
+par(mar = c(0, 0, 0, 0))
+W.center <- scale(W, center = TRUE, scale = FALSE)
+plot (rbind (W, W.center), asp = 1, xlab = '', ylab = '', col = 'white',
+      yaxt = 'n', xaxt = 'n', bty = 'n')
+points(rbind (W, W[1, ]), type = 'b', pch = 19, col = 'black')
+points(rbind (W.center, W.center[1, ]), type = 'b', pch = 19, col = 'lightgrey')
+arrows(W [, 1], W [, 2], W.center [, 1], W.center [, 2], lwd = 3, length = 0.15)
+text (1.7, -.71, labels = 'W')
+text (0, 0, labels = expression(W[c]))
+```
+</div>
+
+## {.smaller}
+
+A fun????o *scale* d?? conta de fazer isso:
+
+```{r}
+X.center <- scale(X, center = TRUE, scale = FALSE)
+X.center
+W.center <- scale(W, center = TRUE, scale = FALSE)
+W.center
+```
+
+<div class='notes'>
+
+Algumas fun????es produzem objetos que possuem atributos. Neste caso, a
+fun????o *scale* subtrai a posi????o do centr??ide original e retorna o
+objeto *centralizado*. No entanto, ela retorna tamb??m um atributo
+deste objeto, que se refere ?? posi????o original do centr??ide.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.center, W.center),
+	asp = 1, xlab = 'X', ylab = 'Y',
+	col = 'white', yaxp = c(-2, 1, 3), xaxp = c(-1, 1, 2))
+points(rbind (X.center, X.center[1, ]), type = 'b', pch = 19)
+points(rbind (W.center, W.center [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[c]), expression(W[c])), bty = 'n')
+```
+
+</div>
+
+## Escalonamento {.smaller .build}
+
+Vamos escalonar ambos $X$ e $W$, desta vez guardando o $CS$ de cada configura????o.
+
+<div class='columns-2'>
+
+```{r}
+cs.X <- centroid.size(X)
+cs.X
+X.centerscale <- X.center / cs.X
+X.centerscale
+```
+
+```{r}
+cs.W <- centroid.size(W)
+cs.W
+W.centerscale <- W.center / cs.W
+W.centerscale
+```
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+plot (rbind (X.centerscale, W.centerscale),
+	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (X.centerscale, X.centerscale[1, ]), type = 'b', pch = 19)
+points(rbind (W.centerscale, W.centerscale [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[cs]), expression(W[cs])), bty = 'n')
+```
+
+</div>
+
+## Rota????o
+
+<div class='columns-2'>
+
+<div class='centered'>
+![Rota????o](rotation.jpg)
+</div>
+
+O que n??s queremos ?? encontrar o ??ngulo $\theta$ que, ao rotacionar o
+tri??ngulo $W$, minimiza a quantidade  
+  
+$$D = \sqrt{d_1^2 + d_2^2 + d_3^2}$$
+
+</div>
+
+---
+
+```{r, fig.width = 8, fig.height = 6, echo = FALSE}
+procDist <- function (theta, A, B)
+  {
+    R.mat <- array(c(cos (theta), sin (theta), -sin(theta), cos(theta)), c(2, 2))
+    B.rot <- B %*% R.mat
+    D <- A - B.rot
+    d <- rowSums (D^2)
+    sqrt (sum (d))
+  }
+par (mar = c(6, 6, 1, 1))
+plot (aaply (seq(0, 2*pi, length.out = 180), 1,
+  procDist, A = X.centerscale, B = W.centerscale) ~
+	seq(0, 2*pi, length.out = 180), type = 'l', xaxt = 'n', ylab = 'D',
+	xlab = expression (theta), cex.lab = 3)
+axis(1, at = seq (0, 2*pi, length.out = 5), labels = c (0, 45, 90, 135, 180))
+abline (v = 20 * pi / 180, lty = 3, col= 'red')
+```
+
+<div class='notes'>
+
+No caso dos tri??ngulos $X$ e $W$, esse ??ngulo ?? um pouco menor que 20??.
+
+</div>
+
+---
+
+<div class='centered'>
+
+```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+OPA <- procOPA (X.centerscale, W.centerscale)
+plot (rbind (OPA $ Ahat, OPA $ Bhat),
+	asp = 1, xlab = 'X', ylab = 'Y', col = 'white', yaxp = c(-0.5, 0.5, 2),
+	xaxp = c(-0.5, 0.5, 2))
+points(rbind (OPA $ Ahat, OPA $ Ahat [1, ]), type = 'b', pch = 19)
+points(rbind (OPA $ Bhat, OPA $ Bhat [1, ]), type = 'b', pch = 15)
+legend ('topright', pch = c(19, 15),
+	legend = c (expression(X[csr]), expression(W[csr])), bty = 'n')
+```
+
+</div>
+
+## OPA para GPA
+
+No caso de mais de dois objetos, o procedimento chama-se GPA de fato.
+
+> - Escalonamento e Transla????o: Id??nticos
+
+> - Rota????o: Processo Iterativo
+
+<div class='notes'>
+
+1. arbitrariamente escolher uma forma de refer??ncia
+   (normalmente, selecionando-a dentre os indiv??duos dispon??veis);
+2. sobrepor todos os indiv??duos ?? forma de refer??ncia atual;
+3. calcular a forma m??dia do conjunto atual de formas sobrepostas;
+4. se a Dist??ncia de Procrustes entre a forma m??dia e a refer??ncia est??
+   acima de um limite, substituir a forma de refer??ncia pela m??dia e
+   voltar ao passo 2; sen??o, terminar.
+
+</div>
+
+## Propriedades do Espa??o da Forma {.build}
+
+Em duas dimens??es, ?? necess??rio estimar, para cada configura????o de
+marcos, quatro par??metros:
+
+- Posi????o do Centr??ide ($x_C$, $y_C$);
+
+- Tamanho do Centr??ide ($CS$);
+
+- ??ngulo de Rota????o ($\theta$).
+
+Em geral, estimamos $m + \frac{m(m-1)}{2} + 1$ par??metros. Por
+exemplo, em tr??s dimens??es, sete par??metros s??o estimados.
+
+<div class='notes'>
+
+- $m$ pela transla????o
+- $\frac{m(m-1)}{2}$ pela rota????o
+- um pelo escalonamento
+
+</div>
+
+
+## Propriedades do Espa??o da Forma {.build}
+
+Assim sendo, o procedimento tem duas consequ??ncias importantes:
+
+- $m + \frac{m(m-1)}{2} + 1$ graus de liberdade s??o perdidos;
+
+- A geometria do morfoespa??o gerado pelas transforma????es n??o ?? euclidiana
+  (por conta da restri????o $CS(X_i) = 1$).
+
+Vamos ilustrar estas propriedades em um exemplo onde constru??mos 10000
+tri??ngulos, submetendo estes ?? GPA.
+
+## Propriedades do Espa??o da Forma
+
+<div class='centered'>
+
+```{r, echo = FALSE, fig.width = 5.5, fig.height = 5.5}
+par(mar = c(7.1, 4.1, 0.1, 2.1))
+plot(t (mil.tri [1, , ]), pch = 20, col = rainbow (10000),
+	xlab = 'X', ylab = 'Y', cex = 0.7)
+points(x = mil.tri [2:3, , 4034], type = 'b', pch = 20, cex = 2, lwd = 5)
+points (mil.tri [1:2, , 4034], type = 'b', pch = 20, cex = 2, lwd = 5)
+points (mil.tri [c(1,3), , 4034], type = 'b', pch = 20, cex = 2, lwd = 5)
+```
+
+</div>
+
+<div class='notes'>
+
+Lembrar que esta n??o ?? uma cobertura total do espa??o.
+
+</div>
+
+## Gr??fico 3D!!!
+
+Nesse caso, nos valemos do fato que, ao aplicar a GPA sobre estes
+objetos, o morfoespa??o gerado possui apenas duas dimens??es, sendo
+poss??vel observamos esse espa??o (com a ajuda do *rgl*!).
+
+<div class='notes'>
+
+Para tri??ngulos, tr??s v??rtices em duas dimens??es representam seis
+vari??veis. Exclu??ndo-se quatro g.l.s, sobram duas dimens??es de
+varia????o de forma. Note que, apesar do espa??o possuir apenas duas
+dimens??es, ele est?? inserido no espa??o ambiente
+tridimensional. Essencialmente, ele ?? uma casca de esfera (por conta
+da restri????o $CS(X_i) = 1$).
+
+</div>
+
+## Propriedades do Espa??o da Forma 
+
+<div class='centered'>
+![](unitshapespace.jpg)
+</div>
+
+## Espa??o Tangente {.smaller}
+
+<div class='centered'>
+![](projection.png)
+</div>
+
+> - Dist??ncia de Procrustes: Dist??ncia (em arco) entre duas formas;
+
+> - Por exemplo, a dist??ncia entre a forma de refer??ncia (m??dia) $A$ e
+>   uma forma $B$ qualquer ($\rho$);
+
+> - Diferentes proje????es podem ser definidas:
+	- Ortogonal ($C$);
+	- Estereogr??fica ($D$).
+
+<div class='notes'>
+
+No caso, $\rho$ pode ser entendido como o tamanho do arco se medido em
+radianos sobre uma bola unit??ria.
+
+</div>
+
+## Espa??o Tangente 
+
+<div class='centered'>
+
+![Proje????o Estereogr??fica](stereoearth.jpg)
+
+</div>
+
+<div class='notes'>
+
+Note que, a medida que n??s nos afastamos do centro, as distor????es aumentam.
+
+</div>
+
+## Espa??o Tangente
+
+<div class='centered'>
+
+```{r, fig.width = 6.5, fig.height = 4.5, echo = FALSE, fig.cap = 'Proje????o Ortogonal'}
+par(mar = c(4.1, 4.1, 0.2, 2.1))
+plot(tri.pca $ x [, 1:2], col = rainbow(10000), pch = 20, cex = 0.7,
+	xlab = '', ylab = '', asp = 1, yaxp = c(-.2, .6, 4))
+```
+
+</div>
+
+<div class='notes'>
+
+Nossa expectativa ?? que a varia????o morfol??gica que n??s encontramos
+fica pr??xima ao ponto onde o espa??o tangente toca a variedade.
+
+</div>
+
+## Espa??o Tangente {.build}
+
+Assim, podemos comparar a Dist??ncia de Procrustes $\rho$ com a
+dist??ncia euclidiana calculada no espa??o tangente, observando que,
+quanto mais distantes estivermos da forma de refer??ncia, maiores ser??o
+as diferen??as entre as duas dist??ncias.
+
+<div class='centered'>
+![](projection.png)
+</div>
+
+Vamos observar a rela????o entre $\rho$ e $AC$ no nosso exemplo.
+
+---
+
+<div class='centered'>
+
+```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+par (mar = c(7.1, 4.1, 0.1, 2.1))
+plot (Norm.tan ~ ProcD, pch = 20, col = rainbow(10000),
+	xlab = expression (rho), ylab = 'AC')
+abline(a=0, b = 1, lwd = 3)
+```
+
+</div>
+
+<div class='notes'>
+
+A medida que nos afastamos do centro, a dist??ncia no espa??o da
+tangente subestima a dist??ncia geod??sica $\rho$.
+
+</div>
+
+## Consequencias Pr??ticas da GPA
+
+> - TODA infer??ncia estat??stica ?? constru??da sobre a premissa que o
+>   espa??o que as observa????es ocupam ?? euclidiano. Assim, se queremos
+>   utilizar t??cnicas param??tricas de estat??stica, temos de usar
+>   proje????es no espa??o da tangente.
+
+> - Nossas vari??veis de forma (res??duos da tangente) sempre ter??o uma
+>   dimensionalidade menor do que aquela representada pelo n??mero de vari??veis.
+
+> - Dessa forma, para lidarmos com vari??veis de forma do ponto de
+>   vista da infer??ncia estat??stica, devemos nos valer de t??cnicas de
+>   redu????o de dimensionalidade (PCA, TPS).
+
+<div class='notes'>
+
+- mas, a princ??pio, toda varia????o morfol??gica que observamos ??
+  confinada ao entorno da forma m??dia, de maneira que as distor????es
+  encontradas na periferia provavelmente n??o interferem na descri????o
+  de varia????o de forma.
+
+- em geral, voc?? n??o precisa se preocupar tanto com a quest??o de
+  projetar no espa??o tangente. a fun????o *gpagen* j?? projeta pra voc??.
+
+</div>
+
+# Thin Plate Splines
+
+## {.smaller}
+
+<div class='columns-2'>
+
+<div class='centered'>
+![](thompson17.jpg)
+</div>
+
+<div class='centered'>
+
+![D'Arcy Thompson](thompson.jpg)
+
+</div>
+
+<div class='centered'>
+![](DWT.jpg)
+</div>
+
+@thompson_growth_1917 prop??e a representa????o de formas atrav??s de grades de
+deforma????o.
+
+</div>
+
+## {.smaller}
+
+<div class='centered'>
+
+![](bookstein89.jpg)
+
+</div>
+
+<div class='columns-2'>
+
+<div class='centered'>
+
+![Fred L. Bookstein](bookstein.jpg)
+
+</div>
+  
+@bookstein_principal_1989 introduziu o formalismo f??sico-matem??tico para a
+estimativa de grades de deforma????o entre uma forma de refer??ncia e uma forma-alvo.
+
+> - Modelo f??sico de comportamento da varia????o morfol??gica;
+
+> - Transforma????o atr??ves de dobramentos em uma placa met??lica fina;
+
+> - Minimizar a energia de dobramento.
+
+</div>
+
+---
+
+<div class='centered'>
+![](refandtarget.png)
+</div>
+
+* Cinza: Refer??ncia
+* Preto: Alvo
+
+<div class='notes'>
+
+Este procedimento se comporta como uma interpola????o, ou seja, procura
+descrever como a varia????o nos tecidos ??sseos se comporta no entorno
+dos *landmarks* amostrados, recorrendo a um modelo f??sico para tal.
+
+</div>
+
+---
+
+<div class='centered'>
+![](vectorgrid.png)
+</div>
+
+## Exemplo
+
+```{r, fig.height = 5, fig.width = 5}
+data(digit3.dat)
+gpa3 <- gpagen(digit3.dat, ShowPlot = FALSE)
+str(gpa3)
+gpa3 $ coords <- gpa3 $ coords [, 2:1, ]
+gpa3 $ coords [, 1, ] <- - gpa3 $ coords [, 1, ]
+```
+
+## {.smaller}
+
+```{r, fig.width = 8, fig.height = 4}
+par (mfrow = c (1, 2), mar = c(2, 2, 2, 2))
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = 'TPS')
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 12],
+                links = cbind (1:12, 2:13), method = 'vector')
+```
+
+<div class='notes'>
+
+Lembrar de falar algo sobre os par??metros gr??ficos.
+
+</div>
+
+## {.smaller}
+
+```{r, fig.width = 8, fig.height = 4}
+par (mfrow = c (1, 2), mar = c(2, 2, 2, 2), bty = 'n', xaxt = 'n', yaxt = 'n')
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
+                links = cbind (1:12, 2:13), method = 'TPS')
+plotRefToTarget(mshape (gpa3 $ coords), gpa3 $ coords [, , 18],
+                links = cbind (1:12, 2:13), method = 'vector')
+```
+
+## Bibliografia {.smaller}
+
